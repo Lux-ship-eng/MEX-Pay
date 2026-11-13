@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ferma — Поддержка фермерского блога</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #22c55e;
+            --accent-hover: #16a34a;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: #334155;
+            --warning: #d97706;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { border-bottom: 1px solid var(--border); background: rgba(15, 23, 42, 0.9); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); }
+        .nav-container { max-width: 900px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: var(--accent); }
+        
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .lang-select { background: var(--card); color: #fff; border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; flex: 1; width: 100%; }
+        
+        .hero { text-align: center; max-width: 700px; margin: 0 auto 30px; }
+        .hero h1 { font-size: 28px; margin-bottom: 10px; font-weight: 800; }
+        .hero p { color: var(--muted); font-size: 15px; margin-bottom: 15px; }
+
+        /* Описание деятельности и целей */
+        .about-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: left; font-size: 14px; color: var(--muted); }
+        .about-box h3 { color: var(--text); margin-bottom: 8px; font-size: 16px; }
+        .about-box ul { margin-left: 20px; margin-top: 8px; }
+        .about-box li { margin-bottom: 4px; }
+
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .social-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Форма доната */
+        .donate-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .donate-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; }
+
+        .amounts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        @media(max-width: 600px) { .amounts-grid { grid-template-columns: repeat(2, 1fr); } }
+        
+        .amount-btn { background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: center; }
+        .amount-btn:hover, .amount-btn.active { border-color: var(--accent); background: rgba(34, 197, 94, 0.1); color: var(--accent); }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+        .form-control { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--accent); }
+
+        .submit-btn { width: 100%; background: var(--border); color: var(--muted); border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: not-allowed; text-align: center; margin-top: 10px; }
+        
+        .notice-banner { background: rgba(217, 119, 6, 0.1); border: 1px solid rgba(217, 119, 6, 0.3); border-radius: 8px; padding: 12px; color: #fcd34d; font-size: 13px; text-align: center; margin-top: 15px; }
+
+        /* Футер */
+        footer { border-top: 1px solid var(--border); background: var(--card); padding: 25px 20px; font-size: 12px; color: var(--muted); text-align: center; }
+        .footer-links { margin-top: 8px; display: flex; justify-content: center; gap: 15px; }
+        .footer-links a { color: var(--muted); text-decoration: none; cursor: pointer; }
+        .footer-links a:hover { color: var(--text); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">🌾 The <span>Ferma</span></div>
+            <div class="nav-right">
+                <select class="lang-select" id="langSelect" onchange="changeLanguage()">
+                    <option value="ru">RU</option>
+                    <option value="en">EN</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1 id="heroTitle">Поддержка фермерского блога The Ferma</h1>
+            <p id="heroDesc">Следите за нашей жизнью в деревне, развитием хозяйства и уходом за животными на TikTok и YouTube.</p>
+        </div>
+
+        <!-- Описание блога и целей поддержки -->
+        <div class="about-box">
+            <h3 id="aboutHeading">О нашем проекте и куда направляется поддержка:</h3>
+            <p id="aboutText">Мы ведем честный видеоблог о буднях реальной фермы: выращивании кормов, содержании птицы и скота, а также строительстве хозяйственных объектов. Ваша помощь и поддержка напрямую направляются на:</p>
+            <ul>
+                <li id="list1">Приобретение качественных кормов и витаминных добавок для животных.</li>
+                <li id="list2">Улучшение ветеринарного ухода и профилактику.</li>
+                <li id="list3">Модернизацию съемочного оборудования (камеры, микрофоны, стабилизаторы) для более качественного контента.</li>
+                <li id="list4">Обустройство и ремонт фермерских построек.</li>
+            </ul>
+        </div>
+
+        <div class="social-links">
+            <a href="https://www.tiktok.com/@thefermatan" target="_blank" class="social-btn">TikTok: @thefermatan</a>
+            <a href="https://youtube.com/@thefermatan" target="_blank" class="social-btn">YouTube Channel</a>
+        </div>
+
+        <div class="donate-card">
+            <div class="donate-title" id="formTitle">Добровольная поддержка проекта</div>
+            
+            <div class="form-group">
+                <label id="lblCurrency">Планируемая валюта / Способ оплаты:</label>
+                <select class="form-control" id="currencySelect" onchange="updateCurrencySymbol()">
+                    <option value="RUB">RUB (🇷🇺 Российский рубль)</option>
+                    <option value="KZT">KZT (🇰🇿 Казахстанский тенге)</option>
+                    <option value="UZS">UZS (🇺🇿 Узбекский сум)</option>
+                    <option value="TRY">TRY (🇹🇷 Турецкая лира)</option>
+                    <option value="USD">USD (🇺🇸 Доллар США)</option>
+                    <option value="USDT">USDT (💎 Криптовалюта TRC-20 / TON)</option>
+                    <option value="BTC">BTC (₿ Bitcoin)</option>
+                    <option value="ETH">ETH (Ξ Ethereum)</option>
+                    <option value="GRAM">GRAM (💠 TON Jetton)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="lblAmount">Выберите или укажите сумму поддержки:</label>
+                <div class="amounts-grid">
+                    <button class="amount-btn" onclick="setAmount(100, this)">100 <span class="currSym">₽</span></button>
+                    <button class="amount-btn active" onclick="setAmount(500, this)">500 <span class="currSym">₽</span></button>
+                    <button class="amount-btn" onclick="setAmount(1000, this)">1,000 <span class="currSym">₽</span></button>
+                    <button class="amount-btn" onclick="setAmount(2500, this)">2,500 <span class="currSym">₽</span></button>
+                </div>
+                <input type="number" class="form-control" id="customAmount" value="500" placeholder="Другая сумма">
+            </div>
+
+            <div class="form-group">
+                <label id="lblName">Ваше имя или никнейм (необязательно):</label>
+                <input type="text" class="form-control" id="donorName" placeholder="Например: Иван">
+            </div>
+
+            <div class="form-group">
+                <label id="lblMessage">Сообщение автору:</label>
+                <textarea class="form-control" id="donorMessage" rows="2" placeholder="Ваши пожелания или привет для фермы..."></textarea>
+            </div>
+
+            <button class="submit-btn" disabled id="btnSubmit">Платёжный сервис подключается</button>
+            <div class="notice-banner" id="noticeText">Приём поддержки временно недоступен. Интеграция платежных шлюзов находится в процессе настройки.</div>
+        </div>
+    </div>
+
+    <footer>
+        <div id="footerText">© 2026 The Fermatan. Voluntary creator support platform.</div>
+        <div class="footer-links">
+            <a onclick="alert('Все будущие платежи являются добровольными безвозмездными пожертвованиями на развитие контента.')" id="termsLink">Правила / Условия</a>
+        </div>
+    </footer>
+
+    <script>
+        const symbols = { 
+            "RUB": "₽", "KZT": "₸", "UZS": "сум", "TRY": "₺", 
+            "USD": "$", "USDT": "USDT", "BTC": "BTC", "ETH": "ETH", "GRAM": "GRAM" 
+        };
+
+        const translations = {
+            ru: {
+                heroTitle: "Поддержка фермерского блога The Ferma",
+                heroDesc: "Следите за нашей жизнью в деревне, развитием хозяйства и уходом за животными на TikTok и YouTube.",
+                aboutHeading: "О нашем проекте и куда направляется поддержка:",
+                aboutText: "Мы ведем честный видеоблог о буднях реальной фермы: выращивании кормов, содержании птицы и скота, а также строительстве хозяйственных объектов. Ваша помощь и поддержка напрямую направляются на:",
+                list1: "Приобретение качественных кормов и витаминных добавок для животных.",
+                list2: "Улучшение ветеринарного ухода и профилактику.",
+                list3: "Модернизацию съемочного оборудования (камеры, микрофоны, стабилизаторы) для более качественного контента.",
+                list4: "Обустройство и ремонт фермерских построек.",
+                formTitle: "Добровольная поддержка проекта",
+                lblCurrency: "Планируемая валюта / Способ оплаты:",
+                lblAmount: "Выберите или укажите сумму поддержки:",
+                lblName: "Ваше имя или никнейм (необязательно):",
+                lblMessage: "Сообщение автору:",
+                btnSubmit: "Платёжный сервис подключается",
+                noticeText: "Приём поддержки временно недоступен. Интеграция платежных шлюзов находится в процессе настройки.",
+                footerText: "© 2026 The Fermatan. Платформа добровольной поддержки авторов.",
+                termsLink: "Правила / Условия"
+            },
+            en: {
+                heroTitle: "Support The Fermatan Farm Blog",
+                heroDesc: "Follow our countryside life, farm development, and animal care on TikTok and YouTube.",
+                aboutHeading: "About our project and where support goes:",
+                aboutText: "We run a transparent video blog about daily farm life: growing feed, raising livestock and poultry, and building farm facilities. Your help goes directly towards:",
+                list1: "Purchasing quality feed and vitamin supplements for the animals.",
+                list2: "Improving veterinary care and disease prevention.",
+                list3: "Upgrading recording equipment (cameras, microphones, stabilizers) for better content quality.",
+                list4: "Renovating and building farm structures.",
+                formTitle: "Voluntary Project Support",
+                lblCurrency: "Planned Currency / Payment Method:",
+                lblAmount: "Select or enter support amount:",
+                lblName: "Your name or nickname (optional):",
+                lblMessage: "Message to creator:",
+                btnSubmit: "Payment service is connecting",
+                noticeText: "Support reception is temporarily unavailable. Payment gateway integration is in progress.",
+                footerText: "© 2026 The Fermatan. Voluntary creator support platform.",
+                termsLink: "Terms & Conditions"
+            }
+        };
+
+        function changeLanguage() {
+            let lang = document.getElementById('langSelect').value;
+            let t = translations[lang];
+            
+            document.getElementById('heroTitle').innerText = t.heroTitle;
+            document.getElementById('heroDesc').innerText = t.heroDesc;
+            document.getElementById('aboutHeading').innerText = t.aboutHeading;
+            document.getElementById('aboutText').innerText = t.aboutText;
+            document.getElementById('list1').innerText = t.list1;
+            document.getElementById('list2').innerText = t.list2;
+            document.getElementById('list3').innerText = t.list3;
+            document.getElementById('list4').innerText = t.list4;
+            document.getElementById('formTitle').innerText = t.formTitle;
+            document.getElementById('lblCurrency').innerText = t.lblCurrency;
+            document.getElementById('lblAmount').innerText = t.lblAmount;
+            document.getElementById('lblName').innerText = t.lblName;
+            document.getElementById('lblMessage').innerText = t.lblMessage;
+            document.getElementById('btnSubmit').innerText = t.btnSubmit;
+            document.getElementById('noticeText').innerText = t.noticeText;
+            document.getElementById('footerText').innerText = t.footerText;
+            document.getElementById('termsLink').innerText = t.termsLink;
+        }
+
+        function updateCurrencySymbol() {
+            let cur = document.getElementById('currencySelect').value;
+            let sym = symbols[cur] || "₽";
+            document.querySelectorAll('.currSym').forEach(el => el.innerText = sym);
+        }
+
+        function setAmount(val, btn) {
+            document.getElementById('customAmount').value = val;
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
