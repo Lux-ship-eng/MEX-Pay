@@ -146,6 +146,82 @@
         .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
         .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.2s; cursor: pointer; }
         .footer-links a:hover { color: var(--accent-color); }
+
+        /* P2P Benefits section — добавлен отдельным блоком, остальные стили не меняются */
+        .p2p-benefits {
+            width: min(1200px, calc(100% - 40px));
+            margin: 24px auto 50px;
+            padding: 34px 28px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+            align-items: center;
+            gap: 42px;
+            background: #0e1117;
+            border: 1px solid rgba(48, 54, 61, 0.55);
+            border-radius: 18px;
+        }
+        .p2p-benefits h2 {
+            color: #a9c9f5;
+            font-size: 30px;
+            line-height: 1.2;
+            font-weight: 800;
+            margin: 0 0 26px;
+        }
+        .p2p-benefit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 23px;
+        }
+        .p2p-benefit {
+            display: grid;
+            grid-template-columns: 28px minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+        }
+        .p2p-benefit-icon {
+            width: 25px;
+            height: 25px;
+            color: #8fb8f2;
+            margin-top: 1px;
+        }
+        .p2p-benefit h3 {
+            color: #a9c9f5;
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 700;
+            margin: 0 0 7px;
+        }
+        .p2p-benefit p {
+            color: #8793a8;
+            font-size: 13px;
+            line-height: 1.55;
+            margin: 0;
+            max-width: 590px;
+        }
+        .p2p-benefits-art {
+            width: 100%;
+            max-width: 410px;
+            justify-self: center;
+            overflow: visible;
+        }
+        .p2p-benefits-art svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        @media (max-width: 760px) {
+            .p2p-benefits {
+                width: calc(100% - 30px);
+                margin: 18px auto 35px;
+                padding: 26px 20px;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .p2p-benefits h2 { font-size: 25px; margin-bottom: 22px; }
+            .p2p-benefit-list { gap: 20px; }
+            .p2p-benefits-art { max-width: 300px; margin-top: 2px; }
+        }
+
     </style>
 </head>
 <body>
@@ -288,6 +364,81 @@
         </div>
     </div>
 
+
+    <!-- Блок преимуществ P2P-биржи -->
+    <section class="p2p-benefits" aria-labelledby="p2pBenefitsTitle">
+        <div class="p2p-benefits-copy">
+            <h2 id="p2pBenefitsTitle">Преимущества P2P-биржи</h2>
+
+            <div class="p2p-benefit-list">
+                <article class="p2p-benefit">
+                    <svg class="p2p-benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9.2"></circle>
+                        <path d="M2.9 12h18.2M12 2.8c2.5 2.5 3.7 5.6 3.7 9.2s-1.2 6.7-3.7 9.2c-2.5-2.5-3.7-5.6-3.7-9.2S9.5 5.3 12 2.8z"></path>
+                    </svg>
+                    <div>
+                        <h3 id="p2pBenefitTitle1">Глобальный и локальный рынок</h3>
+                        <p id="p2pBenefitText1">MEX Pay объединяет пользователей из разных регионов и помогает выбирать удобное направление обмена с учётом доступных валют и платёжных способов.</p>
+                    </div>
+                </article>
+
+                <article class="p2p-benefit">
+                    <svg class="p2p-benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="8.7"></circle>
+                        <circle cx="12" cy="12" r="3.2"></circle>
+                        <path d="M12 1.5v2.2M12 20.3v2.2M1.5 12h2.2M20.3 12h2.2"></path>
+                    </svg>
+                    <div>
+                        <h3 id="p2pBenefitTitle2">Гибкие способы оплаты</h3>
+                        <p id="p2pBenefitText2">Выбирайте подходящий способ перевода и внимательно проверяйте реквизиты и условия сделки перед подтверждением операции.</p>
+                    </div>
+                </article>
+
+                <article class="p2p-benefit">
+                    <svg class="p2p-benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M7 3v5m0 0L4.5 5.5M7 8l2.5-2.5M17 21v-5m0 0-2.5 2.5M17 16l2.5 2.5"></path>
+                        <circle cx="7" cy="14.5" r="3"></circle>
+                        <circle cx="17" cy="9.5" r="3"></circle>
+                    </svg>
+                    <div>
+                        <h3 id="p2pBenefitTitle3">Торгуйте по удобным для вас ценам</h3>
+                        <p id="p2pBenefitText3">Сравнивайте доступные условия обмена и выбирайте подходящий курс. Перед созданием заявки проверьте итоговую сумму и лимиты.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="p2p-benefits-art" aria-hidden="true">
+            <svg viewBox="0 0 420 330" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="benefitGold" x1="70" y1="35" x2="340" y2="290" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#E8C45B"/>
+                        <stop offset="1" stop-color="#A77B20"/>
+                    </linearGradient>
+                </defs>
+                <rect x="83" y="54" width="270" height="218" rx="22" fill="#D6A936" fill-opacity=".045" stroke="url(#benefitGold)" stroke-opacity=".55" stroke-width="2"/>
+                <rect x="286" y="20" width="92" height="92" rx="13" fill="#111720" stroke="url(#benefitGold)" stroke-width="2.5"/>
+                <path d="M313 66l13 13 27-29" stroke="#D9B34C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M333 112v23l-17 18" stroke="#D9B34C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="164" cy="125" r="39" fill="#111720" stroke="url(#benefitGold)" stroke-width="2"/>
+                <circle cx="164" cy="112" r="12" stroke="#D9B34C" stroke-width="2"/>
+                <path d="M141 151c4-16 15-23 23-23s19 7 23 23" stroke="#D9B34C" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="258" cy="220" r="39" fill="#111720" stroke="url(#benefitGold)" stroke-width="2"/>
+                <circle cx="258" cy="207" r="12" stroke="#D9B34C" stroke-width="2"/>
+                <path d="M235 246c4-16 15-23 23-23s19 7 23 23" stroke="#D9B34C" stroke-width="2" stroke-linecap="round"/>
+                <path d="M210 104h20c15 0 24 9 24 24v13" stroke="#D9B34C" stroke-width="4" stroke-linecap="round"/>
+                <path d="M244 132l10 11 10-11" stroke="#D9B34C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M212 242h-17c-15 0-24-9-24-24v-13" stroke="#D9B34C" stroke-width="4" stroke-linecap="round"/>
+                <path d="M181 215l-10-11-10 11" stroke="#D9B34C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="87" cy="264" r="46" fill="#111720" stroke="url(#benefitGold)" stroke-width="2.5"/>
+                <path d="M87 236l5 14 14 5-14 5-5 14-5-14-14-5 14-5 5-14z" stroke="#D9B34C" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M112 231l3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8z" fill="#D9B34C"/>
+                <circle cx="345" cy="170" r="3" fill="#D9B34C" fill-opacity=".65"/>
+                <circle cx="117" cy="43" r="3" fill="#D9B34C" fill-opacity=".65"/>
+            </svg>
+        </div>
+    </section>
+
     <!-- Футер с обязательными страницами -->
     <footer>
         <div class="footer-container">
@@ -388,7 +539,8 @@
     </div>
 
     <script>
-        // Актуальные рыночные цены активов в USD
+        // Рыночная стоимость одной единицы каждой валюты в USD.
+        // Стартовые значения используются только до получения свежих данных от API.
         const assetPricesUSD = {
             "USD": 1,
             "USDT": 1,
@@ -400,6 +552,11 @@
             "ETH": 3400,
             "GRAM": 1.04
         };
+
+        
+        const USER_EXCHANGE_BONUS = 0.08;
+        const USER_EXCHANGE_MULTIPLIER = 1 + USER_EXCHANGE_BONUS;
+        let lastFiatRatesFetch = 0;
 
         const exchangeLimits = {
             "RUB": { min: 1000, max: 500000 },
@@ -414,31 +571,64 @@
         };
 
         async function fetchRealMarketPrices() {
+            // Фиатные курсы: USD, RUB, KZT, UZS и TRY.
+            // Источник обновляет официальный набор курсов; повторно запрашиваем его раз в 30 минут.
+            const now = Date.now();
+            if (now - lastFiatRatesFetch >= 30 * 60 * 1000) {
+                try {
+                    const fiatResponse = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
+                    if (fiatResponse.ok) {
+                        const fiatData = await fiatResponse.json();
+                        if (fiatData.result === 'success' && fiatData.rates) {
+                            const rates = fiatData.rates;
+                            ['RUB', 'KZT', 'UZS', 'TRY'].forEach(currency => {
+                                const unitsPerUSD = Number(rates[currency]);
+                                if (Number.isFinite(unitsPerUSD) && unitsPerUSD > 0) {
+                                    assetPricesUSD[currency] = 1 / unitsPerUSD;
+                                }
+                            });
+                            lastFiatRatesFetch = now;
+                            const rubRate = Number(rates.RUB);
+                            const rubTicker = document.getElementById('ticker-RUB');
+                            if (rubTicker && Number.isFinite(rubRate) && rubRate > 0) {
+                                rubTicker.innerText = rubRate.toFixed(2) + ' ₽';
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('Fiat market rates are temporarily unavailable; using the latest saved values.');
+                }
+            }
+
+            // Криптовалютные курсы: BTC, ETH, TON/GRAM и USDT.
             try {
-                let response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network,tether&vs_currencies=usd,rub');
-                if (response.ok) {
-                    let data = await response.json();
-                    if (data.bitcoin && data.bitcoin.usd) {
-                        assetPricesUSD["BTC"] = data.bitcoin.usd;
-                        document.getElementById('ticker-BTC').innerText = '$' + data.bitcoin.usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                const cryptoResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network,tether&vs_currencies=usd', { cache: 'no-store' });
+                if (cryptoResponse.ok) {
+                    const data = await cryptoResponse.json();
+                    if (data.bitcoin && Number(data.bitcoin.usd) > 0) {
+                        assetPricesUSD['BTC'] = Number(data.bitcoin.usd);
+                        const el = document.getElementById('ticker-BTC');
+                        if (el) el.innerText = '$' + Number(data.bitcoin.usd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
-                    if (data.ethereum && data.ethereum.usd) {
-                        assetPricesUSD["ETH"] = data.ethereum.usd;
-                        document.getElementById('ticker-ETH').innerText = '$' + data.ethereum.usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    if (data.ethereum && Number(data.ethereum.usd) > 0) {
+                        assetPricesUSD['ETH'] = Number(data.ethereum.usd);
+                        const el = document.getElementById('ticker-ETH');
+                        if (el) el.innerText = '$' + Number(data.ethereum.usd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
-                    if (data['the-open-network'] && data['the-open-network'].usd) {
-                        assetPricesUSD["GRAM"] = data['the-open-network'].usd;
-                        document.getElementById('ticker-GRAM').innerText = '$' + data['the-open-network'].usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    if (data['the-open-network'] && Number(data['the-open-network'].usd) > 0) {
+                        assetPricesUSD['GRAM'] = Number(data['the-open-network'].usd);
+                        const el = document.getElementById('ticker-GRAM');
+                        if (el) el.innerText = '$' + Number(data['the-open-network'].usd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
-                    if (data.tether && data.tether.rub) {
-                        assetPricesUSD["RUB"] = 1 / data.tether.rub;
-                        document.getElementById('ticker-RUB').innerText = data.tether.rub.toFixed(2) + ' ₽';
+                    if (data.tether && Number(data.tether.usd) > 0) {
+                        assetPricesUSD['USDT'] = Number(data.tether.usd);
                     }
-                    calculateExchange();
                 }
             } catch (e) {
-                console.log("Using fallback static market prices due to network restriction.");
+                console.log('Crypto market rates are temporarily unavailable; using the latest saved values.');
             }
+
+            calculateExchange();
         }
 
         const translations = {
@@ -792,10 +982,78 @@
             }
         };
 
+
+        const p2pBenefitsTranslations = {
+            ru: {
+                heading: "Преимущества P2P-биржи",
+                title1: "Глобальный и локальный рынок",
+                text1: "MEX Pay объединяет пользователей из разных регионов и помогает выбирать удобное направление обмена с учётом доступных валют и платёжных способов.",
+                title2: "Гибкие способы оплаты",
+                text2: "Выбирайте подходящий способ перевода и внимательно проверяйте реквизиты и условия сделки перед подтверждением операции.",
+                title3: "Торгуйте по удобным для вас ценам",
+                text3: "Сравнивайте доступные условия обмена и выбирайте подходящий курс. Перед созданием заявки проверьте итоговую сумму и лимиты."
+            },
+            en: {
+                heading: "P2P Exchange Benefits",
+                title1: "Global and local markets",
+                text1: "MEX Pay brings users from different regions together and helps them choose an exchange direction based on available currencies and payment methods.",
+                title2: "Flexible payment methods",
+                text2: "Choose a suitable transfer method and carefully review the payment details and transaction terms before confirming.",
+                title3: "Trade at prices that work for you",
+                text3: "Compare the available exchange terms and choose a suitable rate. Check the final amount and limits before creating an order."
+            },
+            zh: {
+                heading: "P2P 交易平台的优势",
+                title1: "全球与本地市场",
+                text1: "MEX Pay 汇集不同地区的用户，并帮助您根据可用货币和支付方式选择合适的兑换方向。",
+                title2: "灵活的支付方式",
+                text2: "选择合适的转账方式，并在确认交易前仔细核对付款信息和交易条件。",
+                title3: "按适合您的价格交易",
+                text3: "比较可用的兑换条件并选择合适的汇率。创建订单前请检查最终金额和限额。"
+            },
+            tr: {
+                heading: "P2P Borsasının Avantajları",
+                title1: "Küresel ve yerel pazar",
+                text1: "MEX Pay, farklı bölgelerdeki kullanıcıları bir araya getirir ve mevcut para birimleri ile ödeme yöntemlerine göre uygun işlem yönünü seçmenize yardımcı olur.",
+                title2: "Esnek ödeme yöntemleri",
+                text2: "Size uygun transfer yöntemini seçin; işlemi onaylamadan önce ödeme bilgilerini ve koşulları dikkatlice kontrol edin.",
+                title3: "Size uygun fiyatlarla işlem yapın",
+                text3: "Mevcut döviz koşullarını karşılaştırıp uygun kuru seçin. Emir oluşturmadan önce toplam tutarı ve limitleri kontrol edin."
+            },
+            kz: {
+                heading: "P2P биржасының артықшылықтары",
+                title1: "Жаһандық және жергілікті нарық",
+                text1: "MEX Pay әртүрлі аймақтардағы пайдаланушыларды біріктіріп, қолжетімді валюталар мен төлем тәсілдеріне қарай айырбастау бағытын таңдауға көмектеседі.",
+                title2: "Икемді төлем тәсілдері",
+                text2: "Өзіңізге қолайлы аудару тәсілін таңдаңыз және операцияны растаудан бұрын деректемелер мен шарттарды мұқият тексеріңіз.",
+                title3: "Өзіңізге қолайлы бағамен сауда жасаңыз",
+                text3: "Қолжетімді айырбастау шарттарын салыстырып, қолайлы бағамды таңдаңыз. Өтінім жасамас бұрын жалпы соманы және лимиттерді тексеріңіз."
+            },
+            uz: {
+                heading: "P2P birjasining afzalliklari",
+                title1: "Global va mahalliy bozor",
+                text1: "MEX Pay turli hududlardagi foydalanuvchilarni birlashtiradi va mavjud valyutalar hamda to‘lov usullariga qarab qulay ayirboshlash yo‘nalishini tanlashga yordam beradi.",
+                title2: "Moslashuvchan to‘lov usullari",
+                text2: "O‘zingizga mos pul o‘tkazish usulini tanlang va operatsiyani tasdiqlashdan oldin rekvizitlar hamda shartlarni diqqat bilan tekshiring.",
+                title3: "O‘zingizga qulay narxlarda savdo qiling",
+                text3: "Mavjud ayirboshlash shartlarini solishtiring va mos kursni tanlang. Buyurtma yaratishdan oldin yakuniy summa va limitlarni tekshiring."
+            }
+        };
+
         function changeLanguage() {
             let lang = document.getElementById('langSelect').value;
             let t = translations[lang] || translations.ru;
             
+
+            const benefitText = p2pBenefitsTranslations[lang] || p2pBenefitsTranslations.ru;
+            document.getElementById('p2pBenefitsTitle').innerText = benefitText.heading;
+            document.getElementById('p2pBenefitTitle1').innerText = benefitText.title1;
+            document.getElementById('p2pBenefitText1').innerText = benefitText.text1;
+            document.getElementById('p2pBenefitTitle2').innerText = benefitText.title2;
+            document.getElementById('p2pBenefitText2').innerText = benefitText.text2;
+            document.getElementById('p2pBenefitTitle3').innerText = benefitText.title3;
+            document.getElementById('p2pBenefitText3').innerText = benefitText.text3;
+
             document.getElementById('lblVipBadge').innerText = t.vipBadge;
             document.getElementById('txtTitle').innerHTML = t.title;
             document.getElementById('txtSub').innerText = t.sub;
@@ -872,7 +1130,7 @@
             }
         }
 
-        // Обновленная формула с бонусом +5% в пользу пользователя
+        // Рыночная конвертация с бонусом +8% в пользу пользователя для любого направления обмена.
         function calculateExchange() {
             let sendAmount = parseFloat(document.getElementById('sendAmount').value) || 0;
             let sendCurrency = document.getElementById('sendCurrency').value;
@@ -906,7 +1164,7 @@
             
             let totalUSD = sendAmount * sendPriceUSD;
             let rawValue = totalUSD / receivePriceUSD;
-            let result = rawValue / 0.95238; // Бонус +5% в пользу пользователя
+            let result = rawValue * USER_EXCHANGE_MULTIPLIER; // Рыночная сумма +8%
 
             document.getElementById('receiveAmount').value = result > 10 ? result.toFixed(2) : result.toFixed(6);
 
@@ -956,7 +1214,7 @@
                         document.getElementById('receiveCurrency').value = data.receiveCurrency;
                         calculateExchange();
                         
-                        // Если заявка была в фоне, показываем фоновый баннер
+                        
                         if (data.inBackground) {
                             showActiveBanner(data.orderId);
                         } else {
@@ -1102,8 +1360,8 @@
         }
         // ----------------------------------------------
 
-        // Генератор живых транзакций с учетом бонуса +5% в пользу пользователя
-        const availableCurrenciesList = ["RUB", "KZT", "USDT", "BTC", "GRAM", "USD", "TRY", "UZS"];
+        
+        const availableCurrenciesList = ["RUB", "KZT", "USDT", "BTC", "ETH", "GRAM", "USD", "TRY", "UZS"];
         const paymentMethodsData = {
             "RUB": ["СБП", "Sberbank", "Tinkoff", "AlfaBank"],
             "KZT": ["Kaspi Gold", "Halyk Bank", "Jusan"],
@@ -1112,6 +1370,7 @@
             "USD": ["Wise", "Revolut", "Visa/MC"],
             "USDT": ["TRC20 Wallet", "BEP20 Wallet"],
             "BTC": ["Bitcoin Network"],
+            "ETH": ["Ethereum Network"],
             "GRAM": ["Gram Wallet Direct"]
         };
 
@@ -1119,7 +1378,7 @@
             let methods = paymentMethodsData[currency] || ["Card/Wallet"];
             let chosenMethod = methods[Math.floor(Math.random() * methods.length)];
             
-            if (currency === "USDT" || currency === "BTC" || currency === "GRAM") {
+            if (currency === "USDT" || currency === "BTC" || currency === "ETH" || currency === "GRAM") {
                 let randomHash = Math.random().toString(36).substring(2, 6) + "..." + Math.random().toString(36).substring(2, 6);
                 return `${chosenMethod} • ${randomHash}`;
             } else {
@@ -1142,7 +1401,7 @@
             let receivePriceUSD = assetPricesUSD[c2] || 1;
             let totalUSD = sum * sendPriceUSD;
             let rawValue = totalUSD / receivePriceUSD;
-            let out = rawValue / 0.95238; // Бонус +5% в пользу пользователя в ленте
+            let out = rawValue * USER_EXCHANGE_MULTIPLIER; // Та же надбавка +8% в ленте
             let outFormatted = out > 10 ? out.toFixed(2) : out.toFixed(6);
 
             let randomReq = generateRandomRequisite(c1);
@@ -1346,6 +1605,7 @@
         }
 
         window.onload = function() {
+            changeLanguage();
             restoreOrderState();
         };
     </script>
