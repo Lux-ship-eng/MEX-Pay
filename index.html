@@ -697,7 +697,7 @@
                 }
             },
             en: {
-                vipBadge: "★ VIP P2P",
+                vipBadge: "★  P2P",
                 title: "Instant P2P Exchange<br>at Favorable Rates",
                 sub: "Express gateway for fast and secure asset conversion.",
                 send: "You pay",
@@ -761,7 +761,7 @@
                 }
             },
             zh: {
-                vipBadge: "★ VIP P2P",
+                vipBadge: "★  P2P",
                 title: "以优惠汇率<br>进行即时 P2P 兑换",
                 sub: "用于快速安全资产兑换的快速网关。",
                 send: "您支付",
@@ -816,7 +816,7 @@
                 }
             },
             tr: {
-                vipBadge: "★ VIP P2P",
+                vipBadge: "★  P2P",
                 title: "Avantajlı Oranlarla<br>Anında P2P Değişimi",
                 sub: "Hızlı ve güvenli varlık dönüşümü için ekspres ağ geçidi.",
                 send: "Ödediğiniz",
@@ -871,7 +871,7 @@
                 }
             },
             kz: {
-                vipBadge: "★ VIP P2P",
+                vipBadge: "★  P2P",
                 title: "Тиімді бағаммен<br>лезде P2P айырбастау",
                 sub: "Активтерді жылдам әрі қауіпсіз конвертациялауға арналған шлюз.",
                 send: "Сіз төлейсіз",
@@ -926,7 +926,7 @@
                 }
             },
             uz: {
-                vipBadge: "★ VIP P2P",
+                vipBadge: "★  P2P",
                 title: "Qulay kursda<br>tezkor P2P ayirboshlash",
                 sub: "Aktivlarni tezkor va xavfsiz konvertatsiya qilish uchun shlyuz.",
                 send: "Siz to'laysiz",
@@ -1130,7 +1130,7 @@
             }
         }
 
-        // Рыночная конвертация с бонусом +8% в пользу пользователя для любого направления обмена.
+        
         function calculateExchange() {
             let sendAmount = parseFloat(document.getElementById('sendAmount').value) || 0;
             let sendCurrency = document.getElementById('sendCurrency').value;
@@ -1164,7 +1164,7 @@
             
             let totalUSD = sendAmount * sendPriceUSD;
             let rawValue = totalUSD / receivePriceUSD;
-            let result = rawValue * USER_EXCHANGE_MULTIPLIER; // Рыночная сумма +8%
+            let result = rawValue * USER_EXCHANGE_MULTIPLIER; 
 
             document.getElementById('receiveAmount').value = result > 10 ? result.toFixed(2) : result.toFixed(6);
 
