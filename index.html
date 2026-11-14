@@ -2,241 +2,1352 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ferma — Поддержка фермерского блога</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MEX Pay — Express P2P Exchange</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --accent: #22c55e;
-            --accent-hover: #16a34a;
-            --text: #f8fafc;
-            --muted: #94a3b8;
-            --border: #334155;
-            --warning: #d97706;
+            --bg-color: #0e1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --accent-color: #58a6ff;
+            --accent-blue: #1f6feb;  
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --gold: #d29922;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         
-        header { border-bottom: 1px solid var(--border); background: rgba(15, 23, 42, 0.9); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); }
-        .nav-container { max-width: 900px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
-        .logo span { color: var(--accent); }
+        header { border-bottom: 1px solid var(--border-color); background: rgba(14, 17, 23, 0.95); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .logo span { color: var(--accent-color); }
         
-        .nav-right { display: flex; align-items: center; gap: 15px; }
-        .lang-select { background: var(--card); color: #fff; border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
+        .nav-right { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .exchange-links { display: flex; gap: 8px; font-size: 12px; }
+        .exchange-links a { color: var(--text-muted); text-decoration: none; background: #21262d; padding: 6px 10px; border-radius: 6px; transition: 0.2s; border: 1px solid var(--border-color); }
+        .exchange-links a:hover { color: #fff; border-color: var(--accent-color); }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; flex: 1; width: 100%; }
+        .lang-select { background: #21262d; color: #fff; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
+
+        .ratings { display: flex; gap: 10px; font-size: 12px; color: var(--text-muted); align-items: center; }
+        .rating-badge { background: rgba(88, 166, 255, 0.15); color: var(--accent-color); padding: 4px 8px; border-radius: 6px; font-weight: 600; border: 1px solid rgba(88, 166, 255, 0.3); }
+
+        .main-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; flex: 1; display: grid; grid-template-columns: 1fr 380px; gap: 30px; align-items: start; width: 100%; }
+        @media(max-width: 900px) { .main-container { grid-template-columns: 1fr; margin: 15px auto; } .ratings { display: none; } }
+
+        .hero-section h1 { font-size: 32px; margin-bottom: 10px; font-weight: 800; line-height: 1.2; color: #fff; }
+        .hero-section p { color: var(--text-muted); font-size: 15px; margin-bottom: 25px; }
         
-        .hero { text-align: center; max-width: 700px; margin: 0 auto 30px; }
-        .hero h1 { font-size: 28px; margin-bottom: 10px; font-weight: 800; }
-        .hero p { color: var(--muted); font-size: 15px; margin-bottom: 15px; }
-
-        /* Описание деятельности и целей */
-        .about-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: left; font-size: 14px; color: var(--muted); }
-        .about-box h3 { color: var(--text); margin-bottom: 8px; font-size: 16px; }
-        .about-box ul { margin-left: 20px; margin-top: 8px; }
-        .about-box li { margin-bottom: 4px; }
-
-        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .social-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s; }
-        .social-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-        /* Форма доната */
-        .donate-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .donate-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; }
-
-        .amounts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        @media(max-width: 600px) { .amounts-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* Exchange Card */
+        .exchange-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         
-        .amount-btn { background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: center; }
-        .amount-btn:hover, .amount-btn.active { border-color: var(--accent); background: rgba(34, 197, 94, 0.1); color: var(--accent); }
+        .exchange-box-row { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; margin-bottom: 12px; }
+        .exchange-box-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+        .exchange-controls { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .exchange-controls input { background: transparent; border: none; color: #fff; font-size: 20px; font-weight: bold; width: 100%; outline: none; }
+        .exchange-select { background: #21262d; color: #fff; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 8px; font-weight: 600; outline: none; cursor: pointer; white-space: nowrap; }
 
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-        .form-control { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
-        .form-control:focus { border-color: var(--accent); }
+        .swap-btn-container { display: flex; justify-content: center; margin: -6px 0 6px; position: relative; z-index: 2; }
+        .swap-direction-btn { background: #21262d; border: 1px solid var(--border-color); color: var(--accent-color); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .swap-direction-btn:hover { background: var(--accent-color); color: #fff; }
 
-        .submit-btn { width: 100%; background: var(--border); color: var(--muted); border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: not-allowed; text-align: center; margin-top: 10px; }
+        .rate-info { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin: 20px 0; padding: 0 5px; flex-direction: column; gap: 6px; }
         
-        .notice-banner { background: rgba(217, 119, 6, 0.1); border: 1px solid rgba(217, 119, 6, 0.3); border-radius: 8px; padding: 12px; color: #fcd34d; font-size: 13px; text-align: center; margin-top: 15px; }
+        .submit-btn { width: 100%; background: var(--accent-blue); color: #fff; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .submit-btn:hover { background: #388bfd; }
 
-        /* Футер */
-        footer { border-top: 1px solid var(--border); background: var(--card); padding: 25px 20px; font-size: 12px; color: var(--muted); text-align: center; }
-        .footer-links { margin-top: 8px; display: flex; justify-content: center; gap: 15px; }
-        .footer-links a { color: var(--muted); text-decoration: none; cursor: pointer; }
-        .footer-links a:hover { color: var(--text); }
+        /* Floating Active Order Banner (Фоновый режим заявки) */
+        .active-order-banner { background: linear-gradient(135deg, #1f6feb22, #58a6ff22); border: 1px solid var(--accent-color); border-radius: 16px; padding: 16px; margin-bottom: 20px; display: none; align-items: center; justify-content: space-between; gap: 15px; animation: fadeIn 0.3s ease; }
+        .active-order-info { display: flex; flex-direction: column; gap: 4px; }
+        .active-order-title { font-size: 13px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .active-order-status { font-size: 11px; color: var(--gold); }
+        .active-order-actions { display: flex; gap: 8px; align-items: center; }
+        .banner-btn { background: var(--accent-blue); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .banner-btn:hover { background: #388bfd; }
+        .banner-cancel-btn { background: transparent; border: 1px solid #f85149; color: #f85149; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .banner-cancel-btn:hover { background: rgba(248, 81, 73, 0.1); }
+
+        /* Sidebar & Stats */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .widget-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; }
+        .widget-title { font-size: 15px; font-weight: bold; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; color: #fff; }
+        
+        .tx-item { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); gap: 10px; align-items: center; }
+        .tx-item:last-child { margin-bottom: 0; padding-bottom: 0; border: none; }
+        .tx-info { display: flex; flex-direction: column; gap: 2px; }
+        .tx-details { font-size: 10px; color: var(--text-muted); font-family: monospace; }
+        .tx-status { color: #3fb950; font-weight: 600; white-space: nowrap; }
+
+        /* Market Rates Ticker */
+        .market-ticker { font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; }
+        .ticker-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .ticker-val { color: #fff; font-weight: 600; }
+        .ticker-change { color: #3fb950; }
+
+        /* Modal (General & Legal/Support Info Modals) */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(5px); padding: 20px; }
+        .modal { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; width: 100%; max-width: 520px; padding: 25px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal h2 { margin-bottom: 15px; font-size: 20px; color: #fff; }
+        .modal-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5; }
+        .modal-body-text { font-size: 13px; color: var(--text-main); line-height: 1.6; margin-bottom: 20px; }
+        .modal-body-text p { margin-bottom: 10px; }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; }
+        .form-input { width: 100%; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 14px; outline: none; }
+        .form-input.error { border-color: #f85149; }
+        .error-hint { color: #f85149; font-size: 11px; margin-top: 4px; display: none; }
+        
+        .requisites-box { background: var(--bg-color); padding: 12px; border-radius: 10px; border: 1px dashed var(--border-color); margin: 10px 0; font-family: monospace; word-break: break-all; font-size: 13px; color: var(--gold); }
+
+        /* Live Status Tracker Styles */
+        .status-tracker { display: flex; flex-direction: column; gap: 15px; margin: 15px 0; }
+        .status-step { display: flex; align-items: flex-start; gap: 12px; position: relative; }
+        .status-step:not(:last-child):after { content: ''; position: absolute; left: 11px; top: 24px; width: 2px; height: calc(100% + 6px); background: var(--border-color); }
+        .status-step.active:not(:last-child):after { background: var(--accent-blue); }
+        .status-step.completed:not(:last-child):after { background: #3fb950; }
+        
+        .status-icon { width: 24px; height: 24px; border-radius: 50%; background: #21262d; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-muted); flex-shrink: 0; z-index: 2; transition: 0.3s; }
+        .status-step.active .status-icon { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; animation: pulse-border 1.5s infinite; }
+        .status-step.completed .status-icon { background: #3fb950; border-color: #3fb950; color: #fff; }
+        
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(31, 111, 235, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(31, 111, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(31, 111, 235, 0); }
+        }
+
+        .status-content { display: flex; flex-direction: column; gap: 2px; }
+        .status-title { font-size: 13px; font-weight: bold; color: #fff; }
+        .status-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+        .timer-box { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; text-align: center; margin-bottom: 15px; }
+        .timer-title { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+        .timer-countdown { font-size: 22px; font-weight: bold; color: var(--gold); font-family: monospace; letter-spacing: 1px; }
+
+        /* Chat Widget */
+        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 99; }
+        .chat-btn { background: var(--accent-blue); color: #fff; width: 55px; height: 55px; border-radius: 50%; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 10px 25px rgba(31,111,235,0.4); font-weight: bold; }
+        .chat-window { position: absolute; bottom: 70px; right: 0; width: 320px; height: 400px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .chat-header { background: #161b22; padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; align-items: center; color: #fff; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+        .message { padding: 10px 14px; border-radius: 10px; max-width: 80%; line-height: 1.4; }
+        .message.bot { background: #21262d; align-self: flex-start; color: var(--text-main); }
+        .message.user { background: var(--accent-blue); color: #fff; align-self: flex-end; font-weight: 500; }
+        .chat-input-area { padding: 10px; border-top: 1px solid var(--border-color); display: flex; gap: 8px; background: #161b22; }
+        .chat-input-area input { flex: 1; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 12px; color: #fff; outline: none; font-size: 13px; }
+        .chat-input-area button { background: var(--accent-blue); border: none; color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .typing-indicator { font-style: italic; color: var(--text-muted); font-size: 11px; display: none; margin-bottom: 5px; padding-left: 15px; }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--border-color); background: var(--card-bg); padding: 25px 20px; margin-top: auto; font-size: 12px; color: var(--text-muted); }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.2s; cursor: pointer; }
+        .footer-links a:hover { color: var(--accent-color); }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <div class="logo">🌾 The <span>Ferma</span></div>
+            <div class="logo">MEX <span>Pay</span></div>
+            
             <div class="nav-right">
+                <div class="exchange-links">
+                    <a href="https://bestchange.com" target="_blank">BestChange ↗</a>
+                </div>
                 <select class="lang-select" id="langSelect" onchange="changeLanguage()">
                     <option value="ru">RU</option>
                     <option value="en">EN</option>
+                    <option value="zh">中文</option>
+                    <option value="tr">TR</option>
+                    <option value="kz">KZ</option>
+                    <option value="uz">UZ</option>
                 </select>
+                <div class="ratings">
+                    <div class="rating-badge" id="lblVipBadge">★ VIP P2P</div>
+                </div>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="hero">
-            <h1 id="heroTitle">Поддержка фермерского блога The Ferma</h1>
-            <p id="heroDesc">Следите за нашей жизнью в деревне, развитием хозяйства и уходом за животными на TikTok и YouTube.</p>
-        </div>
-
-        <!-- Описание блога и целей поддержки -->
-        <div class="about-box">
-            <h3 id="aboutHeading">О нашем проекте и куда направляется поддержка:</h3>
-            <p id="aboutText">Мы ведем честный видеоблог о буднях реальной фермы: выращивании кормов, содержании птицы и скота, а также строительстве хозяйственных объектов. Ваша помощь и поддержка напрямую направляются на:</p>
-            <ul>
-                <li id="list1">Приобретение качественных кормов и витаминных добавок для животных.</li>
-                <li id="list2">Улучшение ветеринарного ухода и профилактику.</li>
-                <li id="list3">Модернизацию съемочного оборудования (камеры, микрофоны, стабилизаторы) для более качественного контента.</li>
-                <li id="list4">Обустройство и ремонт фермерских построек.</li>
-            </ul>
-        </div>
-
-        <div class="social-links">
-            <a href="https://www.tiktok.com/@thefermatan" target="_blank" class="social-btn">TikTok: @thefermatan</a>
-            <a href="https://youtube.com/@thefermatan" target="_blank" class="social-btn">YouTube Channel</a>
-        </div>
-
-        <div class="donate-card">
-            <div class="donate-title" id="formTitle">Добровольная поддержка проекта</div>
+    <div class="main-container">
+        <div class="hero-section">
+            <h1 id="txtTitle">Моментальный P2P обмен<br>по выгодному курсу</h1>
+            <p id="txtSub">Экспресс-шлюз для быстрой и безопасной конвертации активов.</p>
             
-            <div class="form-group">
-                <label id="lblCurrency">Планируемая валюта / Способ оплаты:</label>
-                <select class="form-control" id="currencySelect" onchange="updateCurrencySymbol()">
-                    <option value="RUB">RUB (🇷🇺 Российский рубль)</option>
-                    <option value="KZT">KZT (🇰🇿 Казахстанский тенге)</option>
-                    <option value="UZS">UZS (🇺🇿 Узбекский сум)</option>
-                    <option value="TRY">TRY (🇹🇷 Турецкая лира)</option>
-                    <option value="USD">USD (🇺🇸 Доллар США)</option>
-                    <option value="USDT">USDT (💎 Криптовалюта TRC-20 / TON)</option>
-                    <option value="BTC">BTC (₿ Bitcoin)</option>
-                    <option value="ETH">ETH (Ξ Ethereum)</option>
-                    <option value="GRAM">GRAM (💠 TON Jetton)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label id="lblAmount">Выберите или укажите сумму поддержки:</label>
-                <div class="amounts-grid">
-                    <button class="amount-btn" onclick="setAmount(100, this)">100 <span class="currSym">₽</span></button>
-                    <button class="amount-btn active" onclick="setAmount(500, this)">500 <span class="currSym">₽</span></button>
-                    <button class="amount-btn" onclick="setAmount(1000, this)">1,000 <span class="currSym">₽</span></button>
-                    <button class="amount-btn" onclick="setAmount(2500, this)">2,500 <span class="currSym">₽</span></button>
+            <!-- Интерактивный фоновый баннер активного ордера -->
+            <div class="active-order-banner" id="activeOrderBanner">
+                <div class="active-order-info">
+                    <div class="active-order-title" id="bannerTitleText">⏳ Активная заявка №84920</div>
+                    <div class="active-order-status" id="bannerStatusText">Обработка ордера (Ожидание депозита)</div>
                 </div>
-                <input type="number" class="form-control" id="customAmount" value="500" placeholder="Другая сумма">
+                <div class="active-order-actions">
+                    <button class="banner-btn" onclick="openStatusModalFromBanner()" id="bannerOpenBtn">Открыть</button>
+                    <button class="banner-cancel-btn" onclick="cancelActiveOrderFromBanner()" id="bannerCancelBtn">Отменить</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label id="lblName">Ваше имя или никнейм (необязательно):</label>
-                <input type="text" class="form-control" id="donorName" placeholder="Например: Иван">
+            <div class="exchange-card">
+                <!-- Вы платите -->
+                <div class="exchange-box-row">
+                    <span class="exchange-box-label" id="lblSend">Вы платите</span>
+                    <div class="exchange-controls">
+                        <input type="number" id="sendAmount" value="1000" oninput="calculateExchange()">
+                        <select class="exchange-select" id="sendCurrency" onchange="calculateExchange()">
+                            <option value="RUB" data-type="fiat">RUB (Сбер/Тинькофф)</option>
+                            <option value="KZT" data-type="fiat">KZT (₸ Каспи)</option>
+                            <option value="UZS" data-type="fiat">UZS (ўсў)</option>
+                            <option value="TRY" data-type="fiat">TRY (₺ TL)</option>
+                            <option value="USD" data-type="fiat">USD (Банк. карта)</option>
+                            <option value="USDT" data-type="crypto">USDT (TRC-20)</option>
+                            <option value="BTC" data-type="crypto">BTC (Bitcoin)</option>
+                            <option value="ETH" data-type="crypto">ETH (Ethereum)</option>
+                            <option value="GRAM" data-type="crypto">GRAM (Gram)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Кнопка смены направления -->
+                <div class="swap-btn-container">
+                    <div class="swap-direction-btn" id="swapBtnTitle" onclick="swapCurrencies()" title="Поменять местами">⇄</div>
+                </div>
+                
+                <!-- Вы получаете -->
+                <div class="exchange-box-row">
+                    <span class="exchange-box-label" id="lblReceive">Вы получаете</span>
+                    <div class="exchange-controls">
+                        <input type="text" id="receiveAmount" readonly style="color: var(--accent-color);">
+                        <select class="exchange-select" id="receiveCurrency" onchange="calculateExchange()">
+                            <option value="USDT" data-type="crypto" selected>USDT (TRC-20)</option>
+                            <option value="RUB" data-type="fiat">RUB (Сбер/Тинькофф)</option>
+                            <option value="KZT" data-type="fiat">KZT (₸ Каспи)</option>
+                            <option value="UZS" data-type="fiat">UZS (ўсў)</option>
+                            <option value="TRY" data-type="fiat">TRY (₺ TL)</option>
+                            <option value="USD" data-type="fiat">USD (Банк. карта)</option>
+                            <option value="BTC" data-type="crypto">BTC (Bitcoin)</option>
+                            <option value="ETH" data-type="crypto">ETH (Ethereum)</option>
+                            <option value="GRAM" data-type="crypto">GRAM (Gram)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="rate-info">
+                    <div id="limitWarning" style="font-size: 12px;"></div>
+                </div>
+
+                <button class="submit-btn" id="btnExchange" onclick="openOrderModal()">Обменять сейчас</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="widget-box">
+                <div class="widget-title"><span id="lblLiveTitle">Последние обмены</span> <span style="font-size: 10px; color: var(--accent-color);" id="lblLiveIndicator">● Live</span></div>
+                <div id="liveTransactions">
+                    <div class="tx-item">
+                        <div class="tx-info">
+                            <span>1 000 RUB → 17.65 USDT</span>
+                            <span class="tx-details">СБП • 2202****8831</span>
+                        </div>
+                        <span class="tx-status txStatusClass">Успешно</span>
+                    </div>
+                    <div class="tx-item">
+                        <div class="tx-info">
+                            <span>100 USDT → 5,085.19 RUB</span>
+                            <span class="tx-details">TRC20 • TMEX...9a12</span>
+                        </div>
+                        <span class="tx-status txStatusClass">Успешно</span>
+                    </div>
+                    <div class="tx-item">
+                        <div class="tx-info">
+                            <span>5 000 KZT → 18.49 USDT</span>
+                            <span class="tx-details">Kaspi • 4400****5592</span>
+                        </div>
+                        <span class="tx-status txStatusClass">Успешно</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label id="lblMessage">Сообщение автору:</label>
-                <textarea class="form-control" id="donorMessage" rows="2" placeholder="Ваши пожелания или привет для фермы..."></textarea>
+            <!-- Реальные курсы валют и крипты внизу -->
+            <div class="widget-box">
+                <div class="widget-title" id="lblMarketTitle">📊 Рыночные курсы</div>
+                <div class="market-ticker" id="marketTickerContainer">
+                    <div class="ticker-row"><span>BTC / USD</span> <span class="ticker-val" id="ticker-BTC">$95,000.00</span> <span class="ticker-change">+2.4%</span></div>
+                    <div class="ticker-row"><span>ETH / USD</span> <span class="ticker-val" id="ticker-ETH">$3,400.00</span> <span class="ticker-change">+1.8%</span></div>
+                    <div class="ticker-row"><span>USDT / RUB</span> <span class="ticker-val" id="ticker-RUB">98.50 ₽</span> <span class="ticker-change">+0.1%</span></div>
+                    <div class="ticker-row"><span>GRAM / USD</span> <span class="ticker-val" id="ticker-GRAM">$1.04</span> <span class="ticker-change">+3.2%</span></div>
+                </div>
             </div>
 
-            <button class="submit-btn" disabled id="btnSubmit">Платёжный сервис подключается</button>
-            <div class="notice-banner" id="noticeText">Приём поддержки временно недоступен. Интеграция платежных шлюзов находится в процессе настройки.</div>
+            <div class="widget-box" style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+                <b style="color: #fff; display: block; margin-bottom: 8px;" id="lblGuarantTitle">🛡 Защита сделок MEX Pay</b>
+                <span id="lblGuarantText">Все операции защищены безопасным протоколом эскроу. Средства зачисляются автоматически через 1–3 минуты.</span>
+            </div>
         </div>
     </div>
 
+    <!-- Футер с обязательными страницами -->
     <footer>
-        <div id="footerText">© 2026 The Fermatan. Voluntary creator support platform.</div>
-        <div class="footer-links">
-            <a onclick="alert('Все будущие платежи являются добровольными безвозмездными пожертвованиями на развитие контента.')" id="termsLink">Правила / Условия</a>
+        <div class="footer-container">
+            <div id="footerCopy">© 2026 MEX Pay. All rights reserved.</div>
+            <div class="footer-links">
+                <a onclick="openLegalModal('aml')" id="linkAml">Правила обмена / AML</a>
+                <a onclick="openLegalModal('terms')" id="linkTerms">Соглашение пользователя</a>
+                <a onclick="openLegalModal('contacts')" id="linkContacts">Контакты поддержки</a>
+            </div>
         </div>
     </footer>
 
+    <!-- Модальное окно заявки -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal">
+            <h2 id="modalTitle">Создание заявки №84920</h2>
+            <p class="modal-desc" id="modalDesc">Проверьте детали сделки и укажите необходимые данные для завершения обмена.</p>
+            
+            <div id="modalDynamicContent"></div>
+            <div class="error-hint" id="requisiteError">Неверный формат реквизитов! Введите реальный номер карты (13-19 цифр), телефон СБП или адрес кошелька.</div>
+
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;" id="lblSumToPay">Сумма к отправке:</div>
+            <div id="modalSum" style="font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #fff;">1 000 RUB</div>
+
+            <button class="submit-btn" onclick="confirmPayment()" style="margin-top: 5px;" id="btnConfirm">Я оплатил перевод</button>
+            <button type="button" onclick="cancelOrder()" style="width: 100%; background: transparent; border: none; color: var(--text-muted); margin-top: 12px; cursor: pointer;" id="btnCancel">Отменить заявку</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно расширенного чек-пейджа (Интерактивный статус ордера) -->
+    <div class="modal-overlay" id="statusModal">
+        <div class="modal">
+            <h2 id="statusModalTitle">Обработка ордера №84920</h2>
+            <p class="modal-desc" id="statusModalDesc">Платёж зафиксирован. Пожалуйста, не закрывайте страницу до завершения операции.</p>
+            
+            <div class="timer-box">
+                <div class="timer-title" id="lblTimerTitle">Ожидание подтверждения сети / мерчанта</div>
+                <div class="timer-countdown" id="orderTimer">14:59</div>
+            </div>
+
+            <div class="status-tracker">
+                <div class="status-step active" id="step1">
+                    <div class="status-icon">1</div>
+                    <div class="status-content">
+                        <div class="status-title" id="lblStep1Title">Ожидание депозита (0/1 подтверждений)</div>
+                        <div class="status-desc" id="lblStep1Desc">Проверка поступления средств на шлюз по реквизитам.</div>
+                    </div>
+                </div>
+                <div class="status-step" id="step2">
+                    <div class="status-icon">2</div>
+                    <div class="status-content">
+                        <div class="status-title" id="lblStep2Title">Проверка AML-рисков</div>
+                        <div class="status-desc" id="lblStep2Desc">Автоматический скрининг транзакции на чистоту (Risk-score).</div>
+                    </div>
+                </div>
+                <div class="status-step" id="step3">
+                    <div class="status-icon">3</div>
+                    <div class="status-content">
+                        <div class="status-title" id="lblStep3Title">Выплата средств</div>
+                        <div class="status-desc" id="lblStep3Desc">Зачисление конвертированного актива на ваш указанный адрес/карту.</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="minimizeToBackground()" style="margin-top: 15px; background: #21262d; border: 1px solid var(--border-color);" id="btnCloseStatus">Свернуть в фон</button>
+            <button class="submit-btn" onclick="cancelOrderFromStatusModal()" style="margin-top: 10px; background: transparent; border: 1px solid #f85149; color: #f85149;" id="btnCancelStatus">Отменить заявку</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно для юридической информации и контактов -->
+    <div class="modal-overlay" id="legalModal">
+        <div class="modal">
+            <h2 id="legalModalTitle">Документация</h2>
+            <div class="modal-body-text" id="legalModalContent">
+                <!-- Контент наполняется динамически -->
+            </div>
+            <button class="submit-btn" onclick="closeLegalModal()">Понятно</button>
+        </div>
+    </div>
+
+    <!-- Чат с техподдержкой -->
+    <div class="chat-widget">
+        <button class="chat-btn" onclick="toggleChat()">💬</button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <span id="chatHeaderTitle">Поддержка MEX Pay</span>
+                <span style="cursor: pointer; font-size: 16px;" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot" id="botWelcome">Здравствуйте! Служба поддержки MEX Pay на связи. Все выплаты производятся автоматически сразу после подтверждения транзакции в сети.</div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">Оператор печатает ответ...</div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Введите сообщение..." onkeypress="handleChatEnter(event)">
+                <button onclick="sendChatMessage()" id="btnSend">Отпр</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const symbols = { 
-            "RUB": "₽", "KZT": "₸", "UZS": "сум", "TRY": "₺", 
-            "USD": "$", "USDT": "USDT", "BTC": "BTC", "ETH": "ETH", "GRAM": "GRAM" 
+        // Актуальные рыночные цены активов в USD
+        const assetPricesUSD = {
+            "USD": 1,
+            "USDT": 1,
+            "RUB": 1 / 98.50,
+            "KZT": 1 / 485.0,
+            "UZS": 1 / 12800.0,
+            "TRY": 1 / 35.5,
+            "BTC": 95000,
+            "ETH": 3400,
+            "GRAM": 1.04
         };
+
+        const exchangeLimits = {
+            "RUB": { min: 1000, max: 500000 },
+            "KZT": { min: 5000, max: 2500000 },
+            "UZS": { min: 150000, max: 50000000 },
+            "TRY": { min: 400, max: 150000 },
+            "USD": { min: 15, max: 5000 },
+            "USDT": { min: 15, max: 5000 },
+            "BTC": { min: 0.0002, max: 0.5 },
+            "ETH": { min: 0.005, max: 5 },
+            "GRAM": { min: 3, max: 1000 }
+        };
+
+        async function fetchRealMarketPrices() {
+            try {
+                let response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network,tether&vs_currencies=usd,rub');
+                if (response.ok) {
+                    let data = await response.json();
+                    if (data.bitcoin && data.bitcoin.usd) {
+                        assetPricesUSD["BTC"] = data.bitcoin.usd;
+                        document.getElementById('ticker-BTC').innerText = '$' + data.bitcoin.usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    }
+                    if (data.ethereum && data.ethereum.usd) {
+                        assetPricesUSD["ETH"] = data.ethereum.usd;
+                        document.getElementById('ticker-ETH').innerText = '$' + data.ethereum.usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    }
+                    if (data['the-open-network'] && data['the-open-network'].usd) {
+                        assetPricesUSD["GRAM"] = data['the-open-network'].usd;
+                        document.getElementById('ticker-GRAM').innerText = '$' + data['the-open-network'].usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    }
+                    if (data.tether && data.tether.rub) {
+                        assetPricesUSD["RUB"] = 1 / data.tether.rub;
+                        document.getElementById('ticker-RUB').innerText = data.tether.rub.toFixed(2) + ' ₽';
+                    }
+                    calculateExchange();
+                }
+            } catch (e) {
+                console.log("Using fallback static market prices due to network restriction.");
+            }
+        }
 
         const translations = {
             ru: {
-                heroTitle: "Поддержка фермерского блога The Ferma",
-                heroDesc: "Следите за нашей жизнью в деревне, развитием хозяйства и уходом за животными на TikTok и YouTube.",
-                aboutHeading: "О нашем проекте и куда направляется поддержка:",
-                aboutText: "Мы ведем честный видеоблог о буднях реальной фермы: выращивании кормов, содержании птицы и скота, а также строительстве хозяйственных объектов. Ваша помощь и поддержка напрямую направляются на:",
-                list1: "Приобретение качественных кормов и витаминных добавок для животных.",
-                list2: "Улучшение ветеринарного ухода и профилактику.",
-                list3: "Модернизацию съемочного оборудования (камеры, микрофоны, стабилизаторы) для более качественного контента.",
-                list4: "Обустройство и ремонт фермерских построек.",
-                formTitle: "Добровольная поддержка проекта",
-                lblCurrency: "Планируемая валюта / Способ оплаты:",
-                lblAmount: "Выберите или укажите сумму поддержки:",
-                lblName: "Ваше имя или никнейм (необязательно):",
-                lblMessage: "Сообщение автору:",
-                btnSubmit: "Платёжный сервис подключается",
-                noticeText: "Приём поддержки временно недоступен. Интеграция платежных шлюзов находится в процессе настройки.",
-                footerText: "© 2026 The Fermatan. Платформа добровольной поддержки авторов.",
-                termsLink: "Правила / Условия"
+                vipBadge: "★ VIP P2P",
+                title: "Моментальный P2P обмен<br>по выгодному курсу",
+                sub: "Экспресс-шлюз для быстрой и безопасной конвертации активов.",
+                send: "Вы платите",
+                receive: "Вы получаете",
+                swapTitle: "Поменять местами",
+                btnEx: "Обменять сейчас",
+                liveTitle: "Последние обмены",
+                liveIndicator: "● Live",
+                success: "Успешно",
+                marketTitle: "📊 Рыночные курсы",
+                guarTitle: "🛡 Защита сделок MEX Pay",
+                guarText: "Все операции защищены безопасным протоколом эскроу. Средства зачисляются автоматически через 1–3 минуты.",
+                modTitle: "Создание заявки №",
+                modDesc: "Проверьте детали сделки и укажите необходимые данные для завершения обмена.",
+                sumToPay: "Сумма к отправке:",
+                btnConf: "Я оплатил перевод",
+                btnCanc: "Отменить заявку",
+                chatTitle: "Поддержка MEX Pay",
+                botHello: "Здравствуйте! Служба поддержки MEX Pay на связи. Все выплаты производятся автоматически сразу после подтверждения транзакции в сети.",
+                typingText: "Оператор печатает ответ...",
+                placeholderChat: "Введите сообщение...",
+                sendBtn: "Отпр",
+                alertReq: "Пожалуйста, введите корректные реальные реквизиты (номер карты, СБП или адрес кошелька)!",
+                statusModalTitle: "Обработка ордера №",
+                statusModalDesc: "Платёж зафиксирован. Пожалуйста, не закрывайте страницу до завершения операции.",
+                timerTitle: "Ожидание подтверждения сети / мерчанта",
+                step1Title: "Ожидание депозита (0/1 подтверждений)",
+                step1Desc: "Проверка поступления средств на шлюз по реквизитам.",
+                step2Title: "Проверка AML-рисков",
+                step2Desc: "Автоматический скрининг транзакции на чистоту (Risk-score).",
+                step3Title: "Выплата средств",
+                step3Desc: "Зачисление конвертированного актива на ваш указанный адрес/карту.",
+                closeStatusBtn: "Свернуть в фон",
+                bannerOpen: "Открыть",
+                bannerCancel: "Отменить",
+                bannerActiveStatus: "Обработка ордера (Ожидание депозита)",
+                fiatLabel: "Ваш номер банковской карты / СБП / Каспи (куда зачислить криптовалюту):",
+                fiatPlaceholder: "Например: 2202 2020 3030 ...",
+                fiatGatewayTitle: "Реквизиты фиатного шлюза для перевода:",
+                fiatGatewayText: "СБП / Банк: +7 (900) 555-35-35 (Официальный шлюз MEX Pay) <br> Получатель: Mex Pay Global Ltd.",
+                cryptoLabel: "Ваши реквизиты для получения фиата (карта / счет):",
+                cryptoPlaceholder: "Введите номер карты для получения рублей/тенге",
+                cryptoGatewayTitle: "Адрес криптокошелька шлюза для отправки актива:",
+                cryptoGatewayText: "USDT (TRC20): TMEXP2POfficialEscrowWallet777...",
+                amlText: "Правила обмена / AML",
+                termsText: "Соглашение пользователя",
+                contactsText: "Контакты поддержки",
+                legalData: {
+                    aml: {
+                        title: "Правила обмена и AML/KYC политика",
+                        content: "<p><b>1. Общие положения</b><br>Настоящие Правила регулируют порядок проведения обменных операций на платформе MEX Pay. Используя сервис, пользователь соглашается с условиями регламента.</p><p><b>2. Противодействие отмыванию денег (AML)</b><br>Сервис придерживается строгой политики AML. Все входящие и исходящие транзакции проверяются автоматизированными системами мониторинга risk-score. В случае выявления высокорисковых связок (Darknet, Mixers, Sanctions), операция может быть приостановлена до прохождения полной верификации личности (KYC).</p><p><b>3. Сроки исполнения</b><br>Стандартное время зачисления средств составляет от 1 до 15 минут с момента фактического подтверждения перевода сетью или банком-эмитентом.</p>"
+                    },
+                    terms: {
+                        title: "Пользовательское соглашение оферта",
+                        content: "<p><b>1. Предмет соглашения</b><br>Платформа MEX Pay предоставляет программный интерфейс и экспресс-инструменты для конвертации цифровых и фиатных активов.</p><p><b>2. Ответственность сторон</b><br>Пользователь гарантирует законность происхождения направляемых средств. Администрация не несет ответственности за задержки, вызванные регламентом работы банковских учреждений или перегрузкой блокчейн-сетей.</p><p><b>3. Изменение условий</b><br>Сервис оставляет за собой право в одностороннем порядке менять курсовую политику и комиссии шлюзов без предварительного персонального уведомления.</p>"
+                    },
+                    contacts: {
+                        title: "Служба поддержки и реквизиты компании",
+                        content: "<p><b>Официальные каналы связи:</b></p><p>• <b>Электронная почта:</b> support@mexpay-express.io<br>• <b>Telegram Desk:</b> @Mexpay_Support_Bot<br>• <b>График работы:</b> Круглосуточно (24/7/365)</p><p><b>Юридический адрес оператора:</b><br>Mex Pay Global Ltd., Suite 305, Griffith Corporate Centre, Kingstown, St. Vincent and the Grenadines.</p>"
+                    }
+                }
             },
             en: {
-                heroTitle: "Support The Fermatan Farm Blog",
-                heroDesc: "Follow our countryside life, farm development, and animal care on TikTok and YouTube.",
-                aboutHeading: "About our project and where support goes:",
-                aboutText: "We run a transparent video blog about daily farm life: growing feed, raising livestock and poultry, and building farm facilities. Your help goes directly towards:",
-                list1: "Purchasing quality feed and vitamin supplements for the animals.",
-                list2: "Improving veterinary care and disease prevention.",
-                list3: "Upgrading recording equipment (cameras, microphones, stabilizers) for better content quality.",
-                list4: "Renovating and building farm structures.",
-                formTitle: "Voluntary Project Support",
-                lblCurrency: "Planned Currency / Payment Method:",
-                lblAmount: "Select or enter support amount:",
-                lblName: "Your name or nickname (optional):",
-                lblMessage: "Message to creator:",
-                btnSubmit: "Payment service is connecting",
-                noticeText: "Support reception is temporarily unavailable. Payment gateway integration is in progress.",
-                footerText: "© 2026 The Fermatan. Voluntary creator support platform.",
-                termsLink: "Terms & Conditions"
+                vipBadge: "★ VIP P2P",
+                title: "Instant P2P Exchange<br>at Favorable Rates",
+                sub: "Express gateway for fast and secure asset conversion.",
+                send: "You pay",
+                receive: "You get",
+                swapTitle: "Swap directions",
+                btnEx: "Exchange Now",
+                liveTitle: "Live Exchanges",
+                liveIndicator: "● Live",
+                success: "Success",
+                marketTitle: "📊 Market Rates",
+                guarTitle: "🛡 MEX Pay Escrow Protection",
+                guarText: "All transactions are secured by secure escrow. Funds arrive automatically within 1-3 minutes.",
+                modTitle: "Create Order #",
+                modDesc: "Check order details and provide data to complete exchange.",
+                sumToPay: "Amount to send:",
+                btnConf: "I have paid",
+                btnCanc: "Cancel order",
+                chatTitle: "MEX Pay Support",
+                botHello: "Hello! MEX Pay Support is online. Payments are credited automatically right after network confirmation.",
+                typingText: "Operator is typing...",
+                placeholderChat: "Type a message...",
+                sendBtn: "Send",
+                alertReq: "Please enter valid real details (card number, SBP or wallet address)!",
+                statusModalTitle: "Processing Order #",
+                statusModalDesc: "Payment locked. Please do not close this page until the operation completes.",
+                timerTitle: "Waiting for network / merchant confirmation",
+                step1Title: "Waiting for deposit (0/1 confirmations)",
+                step1Desc: "Verifying incoming funds according to gateway requisites.",
+                step2Title: "AML Risk Screening",
+                step2Desc: "Automated transaction compliance and risk-score check.",
+                step3Title: "Funds Payout",
+                step3Desc: "Crediting converted asset to your destination address/card.",
+                closeStatusBtn: "Minimize to background",
+                bannerOpen: "Open",
+                bannerCancel: "Cancel",
+                bannerActiveStatus: "Processing order (Waiting for deposit)",
+                fiatLabel: "Your bank card / SBP / Kaspi number (where to credit cryptocurrency):",
+                fiatPlaceholder: "E.g.: 2202 2020 3030 ...",
+                fiatGatewayTitle: "Gateway fiat details for transfer:",
+                fiatGatewayText: "SBP / Bank: +7 (900) 555-35-35 (Official MEX Pay Gateway) <br> Recipient: Mex Pay Global Ltd.",
+                cryptoLabel: "Your fiat payout details (card / account):",
+                cryptoPlaceholder: "Enter card number to receive fiat",
+                cryptoGatewayTitle: "Gateway crypto wallet address to send asset:",
+                cryptoGatewayText: "USDT (TRC20): TMEXP2POfficialEscrowWallet777...",
+                amlText: "Exchange Rules / AML",
+                termsText: "User Agreement",
+                contactsText: "Support Contacts",
+                legalData: {
+                    aml: {
+                        title: "Exchange Rules and AML/KYC Policy",
+                        content: "<p><b>1. General Provisions</b><br>These Rules govern the exchange transactions on the MEX Pay platform. By using the service, the user agrees to the terms.</p><p><b>2. Anti-Money Laundering (AML)</b><br>The service adheres to strict AML policies. All transactions are screened by automated risk-scoring systems.</p><p><b>3. Processing Time</b><br>Standard processing takes 1 to 15 minutes from actual network confirmation.</p>"
+                    },
+                    terms: {
+                        title: "User Agreement Terms",
+                        content: "<p><b>1. Subject of Agreement</b><br>MEX Pay provides software tools for digital asset conversion.</p><p><b>2. Liability</b><br>The user guarantees the legal origin of funds.</p>"
+                    },
+                    contacts: {
+                        title: "Support Desk & Company Details",
+                        content: "<p>• <b>Email:</b> support@mexpay-express.io<br>• <b>Telegram:</b> @Mexpay_Support_Bot<br>• <b>Hours:</b> 24/7/365</p>"
+                    }
+                }
+            },
+            zh: {
+                vipBadge: "★ VIP P2P",
+                title: "以优惠汇率<br>进行即时 P2P 兑换",
+                sub: "用于快速安全资产兑换的快速网关。",
+                send: "您支付",
+                receive: "您收到",
+                swapTitle: "切换方向",
+                btnEx: "立即兑换",
+                liveTitle: "实时兑换记录",
+                liveIndicator: "● 实时",
+                success: "成功",
+                marketTitle: "📊 市场行情",
+                guarTitle: "🛡 MEX Pay 托管保护",
+                guarText: "所有交易均受到安全托管保护，资金将在 1-3 分钟内自动到账。",
+                modTitle: "创建订单 #",
+                modDesc: "核对订单详情并提供收款信息。",
+                sumToPay: "应付金额：",
+                btnConf: "我已付款",
+                btnCanc: "取消订单",
+                chatTitle: "MEX Pay 客服",
+                botHello: "您好！MEX Pay 客服在线。资金将在确认后自动到账。",
+                placeholderChat: "输入消息...",
+                sendBtn: "发送",
+                typingText: "客服正在输入...",
+                alertReq: "请输入正确的真实收款信息（卡号、电话或钱包地址）！",
+                statusModalTitle: "处理订单 #",
+                statusModalDesc: "款项已锁定义。请勿关闭此页面，直至操作完成。",
+                timerTitle: "等待网络/商户确认",
+                step1Title: "等待充值 (0/1 确认)",
+                step1Desc: "正在核对网关收款账户中的入账情况。",
+                step2Title: "AML 风控筛查",
+                step2Desc: "自动化交易合规度及风险评分检查。",
+                step3Title: "资金释放",
+                step3Desc: "将转换后的资产划转至您的目标账户。",
+                closeStatusBtn: "最小化至后台",
+                bannerOpen: "打开",
+                bannerCancel: "取消",
+                bannerActiveStatus: "正在处理订单 (等待充值)",
+                fiatLabel: "您的银行卡 / 支付账户号码（用于接收加密货币）：",
+                fiatPlaceholder: "例如：2202 2020 3030 ...",
+                fiatGatewayTitle: "网关法币汇款信息：",
+                fiatGatewayText: "银行/支付网关：+7 (900) 555-35-35 (MEX Pay 官方网关) <br> 收款人：Mex Pay Global Ltd.",
+                cryptoLabel: "您的法币收款信息（银行卡/账户）：",
+                cryptoPlaceholder: "输入用于接收法币的卡号",
+                cryptoGatewayTitle: "发送资产的网关加密钱包地址：",
+                cryptoGatewayText: "USDT (TRC20): TMEXP2POfficialEscrowWallet777...",
+                amlText: "兑换规则 / AML",
+                termsText: "用户协议",
+                contactsText: "客服联系方式",
+                legalData: {
+                    aml: { title: "兑换规则与 AML 政策", content: "<p><b>1. 概述</b><br>本规则管辖 MEX Pay 平台上的兑换交易。</p>" },
+                    terms: { title: "用户协议", content: "<p><b>1. 协议标的</b><br>MEX Pay 提供数字资产转换工具。</p>" },
+                    contacts: { title: "客服支持与公司信息", content: "<p>• <b>邮箱:</b> support@mexpay-express.io<br>• <b>工作时间:</b> 24/7</p>" }
+                }
+            },
+            tr: {
+                vipBadge: "★ VIP P2P",
+                title: "Avantajlı Oranlarla<br>Anında P2P Değişimi",
+                sub: "Hızlı ve güvenli varlık dönüşümü için ekspres ağ geçidi.",
+                send: "Ödediğiniz",
+                receive: "Aldığınız",
+                swapTitle: "Yönü Değiştir",
+                btnEx: "Şimdi Değiştir",
+                liveTitle: "Son İşlemler",
+                liveIndicator: "● Canlı",
+                success: "Başarılı",
+                marketTitle: "📊 Piyasa Oranları",
+                guarTitle: "🛡 MEX Pay Güvencesi",
+                guarText: "Tüm işlemler güvenli emanet protokolü ile korunmaktadır. Fonlar 1-3 dakika içinde hesabınıza geçer.",
+                modTitle: "İşlem Oluştur #",
+                modDesc: "İşlem detaylarını kontrol edin ve bilgilerinizi girin.",
+                sumToPay: "Gönderilecek Tutar:",
+                btnConf: "Ödemeyi Yaptım",
+                btnCanc: "İptal Et",
+                chatTitle: "MEX Pay Destek",
+                botHello: "Merhaba! MEX Pay Destek ekibi çevrimiçi. Ödemeniz onaylandıktan sonra fonlar hesabınıza aktarılır.",
+                typingText: "Operatör yazıyor...",
+                placeholderChat: "Bir mesaj yazın...",
+                sendBtn: "Gönder",
+                alertReq: "Lütfen geçerli gerçek bilgileri girin (kart numarası, telefon veya cüzdan adresi)!",
+                statusModalTitle: "İşlem İşleniyor #",
+                statusModalDesc: "Ödeme kilitlendi. İşlem tamamlanana kadar lütfen sayfayı kapatmayın.",
+                timerTitle: "Ağ / satıcı onayı bekleniyor",
+                step1Title: "Depozito bekleniyor (0/1 onay)",
+                step1Desc: "Ağ geçidi hesaplarında gelen ödeme doğrulanıyor.",
+                step2Title: "AML Risk Taraması",
+                step2Desc: "Otomatik işlem uyumluluğu ve risk puanı kontrolü.",
+                step3Title: "Fonların Gönderilmesi",
+                step3Desc: "Dönüştürülen varlığın hedef hesabınıza aktarılması.",
+                closeStatusBtn: "Arka plana küçült",
+                bannerOpen: "Aç",
+                bannerCancel: "İptal Et",
+                bannerActiveStatus: "İşlem işleniyor (Depozito bekleniyor)",
+                fiatLabel: "Banka kartı / SBP / Kaspi numaranız (kripto paranın aktarılacağı yer):",
+                fiatPlaceholder: "Örneğin: 2202 2020 3030 ...",
+                fiatGatewayTitle: "Transfer için ağ geçidi bilgileri:",
+                fiatGatewayText: "Banka / SBP: +7 (900) 555-35-35 (Resmi MEX Pay Ağ Geçidi) <br> Alıcı: Mex Pay Global Ltd.",
+                cryptoLabel: "İtibari para alım bilgileriniz (kart / hesap):",
+                cryptoPlaceholder: "Para almak için kart numaranızı girin",
+                cryptoGatewayTitle: "Varlık göndermek için ağ geçidi cüzdan adresi:",
+                cryptoGatewayText: "USDT (TRC20): TMEXP2POfficialEscrowWallet777...",
+                amlText: "Değişim Kuralları / AML",
+                termsText: "Kullanıcı Sözleşmesi",
+                contactsText: "Destek İletişim",
+                legalData: {
+                    aml: { title: "Değişim Kuralları ve AML Politikası", content: "<p><b>1. Genel Hükümler</b><br>Bu kurallar MEX Pay platformundaki işlemleri düzenler.</p>" },
+                    terms: { title: "Kullanıcı Sözleşmesi", content: "<p><b>1. Konu</b><br>MEX Pay dijital varlık dönüştürme araçları sağlar.</p>" },
+                    contacts: { title: "Destek ve İletişim", content: "<p>• <b>E-posta:</b> support@mexpay-express.io<br>• <b>Çalışma Saatleri:</b> 7/24</p>" }
+                }
+            },
+            kz: {
+                vipBadge: "★ VIP P2P",
+                title: "Тиімді бағаммен<br>лезде P2P айырбастау",
+                sub: "Активтерді жылдам әрі қауіпсіз конвертациялауға арналған шлюз.",
+                send: "Сіз төлейсіз",
+                receive: "Сіз аласыз",
+                swapTitle: "Бағытын ауыстыру",
+                btnEx: "Айырбастау",
+                liveTitle: "Соңғы алмасулар",
+                liveIndicator: "● Live",
+                success: "Сәтті",
+                marketTitle: "📊 Нарықтық бағамдар",
+                guarTitle: "🛡 MEX Pay Қорғанысы",
+                guarText: "Барлық транзакциялар эскроу хаттамасымен қорғалған. Қаражат 1-3 минут ішінде түседі.",
+                modTitle: "Тапсырыс #",
+                modDesc: "Мәліметтерді тексеріп, қажетті деректерді енгізіңіз.",
+                sumToPay: "Жіберілетін сома:",
+                btnConf: "Мен төледім",
+                btnCanc: "Болдырмау",
+                chatTitle: "MEX Pay Қолдау",
+                botHello: "Сәлем! MEX Pay қолдау қызметі байланыста. Төлем расталған соң қаражат автоматты түрде түседі.",
+                typingText: "Оператор жазып жатыр...",
+                placeholderChat: "Хабарлама жазыңыз...",
+                sendBtn: "Жіберу",
+                alertReq: "Дұрыс реальные реквизиттерді енгізіңіз (карта нөмірі, телефон немесе кошелек мекенжайы)!",
+                statusModalTitle: "Тапсырысты өңдеу №",
+                statusModalDesc: "Төлем бекітілді. Операция аяқталғанша бетті жаппауыңызды сұраймыз.",
+                timerTitle: "Желіні / мерчантты растауды күту",
+                step1Title: "Депозитті күту (0/1 растау)",
+                step1Desc: "Реквизиттер бойынша шлюзге қаражаттың түскенін тексеру.",
+                step2Title: "AML қауіптерін тексеру",
+                step2Desc: "Транзакцияны тазалыққа автоматты түрде скрининг жасау (Risk-score).",
+                step3Title: "Қаражатты төлеу",
+                step3Desc: "Конвертацияланған активті көрсетілген мекенжайға/картаға есептеу.",
+                closeStatusBtn: "Фонға жасыру",
+                bannerOpen: "Ашу",
+                bannerCancel: "Болдырмау",
+                bannerActiveStatus: "Тапсырысты өңдеу (Депозитті күту)",
+                fiatLabel: "Банк картасының / SBP / Kaspi нөмірі (криптовалюта түсетін жер):",
+                fiatPlaceholder: "Мысалы: 2202 2020 3030 ...",
+                fiatGatewayTitle: "Фиат шлюзінің аударым деректемелері:",
+                fiatGatewayText: "Банк / SBP: +7 (900) 555-35-35 (MEX Pay ресми шлюзі) <br> Алға алушы: Mex Pay Global Ltd.",
+                cryptoLabel: "Фиат алуға арналған деректемелер (карта / шот):",
+                cryptoPlaceholder: "Ақша алу үшін карта нөмірін енгізіңіз",
+                cryptoGatewayTitle: "Активті жіберуге арналған шлюздің криптокошелек мекенжайы:",
+                cryptoGatewayText: "USDT (TRC20): TMEXP2POfficialEscrowWallet777...",
+                amlText: "Айырбастау ережелері / AML",
+                termsText: "Пайдаланушы келісімі",
+                contactsText: "Қолдау контактілері",
+                legalData: {
+                    aml: { title: "Айырбастау ережелері мен AML саясаты", content: "<p><b>1. Жалпы ережелер</b><br>Бұл ережелер MEX Pay платформасындағы операцияларды реттейді.</p>" },
+                    terms: { title: "Пайдаланушы келісімі", content: "<p><b>1. Шарт мәні</b><br>MEX Pay платформасы цифрлық активтерді конвертациялау құралдарын ұсынады.</p>" },
+                    contacts: { title: "Қолдау қызметі мен контактілер", content: "<p>• <b>Электрондық пошта:</b> support@mexpay-express.io<br>• <b>Жұмыс уақыты:</b> Тәулік бойы (24/7)</p>" }
+                }
+            },
+            uz: {
+                vipBadge: "★ VIP P2P",
+                title: "Qulay kursda<br>tezkor P2P ayirboshlash",
+                sub: "Aktivlarni tezkor va xavfsiz konvertatsiya qilish uchun shlyuz.",
+                send: "Siz to'laysiz",
+                receive: "Siz olasiz",
+                swapTitle: "Yo'nalishni almashtirish",
+                btnEx: "Almashish",
+                liveTitle: "So'nggi ayirboshlashlar",
+                liveIndicator: "● Jonli",
+                success: "Muvaffaqiyatli",
+                marketTitle: "📊 Bozor kurslari",
+                guarTitle: "🛡 MEX Pay Kafolati",
+                guarText: "Barcha tranzaksiyalar xavfsiz eskrou protokoli bilan himoyalangan. Mablag'lar 1-3 daqiqada tushadi.",
+                modTitle: "Buyurtma #",
+                modDesc: "Ma'lumotlarni tekshiring va kerakli rekvizitni kiriting.",
+                sumToPay: "Yuboriladigan summa:",
+                btnConf: "To'lovni qildim",
+                btnCanc: "Bekor qilish",
+                chatTitle: "MEX Pay Qo'llab-quvvatlash",
+                botHello: "Salom! MEX Pay qo'llab-quvvatlash xizmati aloqada. Mablag'lar tasdiqlangandan so'ng tushadi.",
+                typingText: "Operator yozmoqda...",
+                placeholderChat: "Xabar yozing...",
+                sendBtn: "Yuborish",
+                alertReq: "Iltimos, haqiqiy rekvizitlarni kiriting (karta raqami, telefon yoki hamyon manzili)!",
+                statusModalTitle: "Buyurtmani qayta ishlash №",
+                statusModalDesc: "To'lov qayd etildi. Amal bajarilguncha sahifani yopmang.",
+                timerTitle: "Tarmoq / savdogar tasdiqlashini kutish",
+                step1Title: "Depozitni kutish (0/1 tasdiqlash)",
+                step1Desc: "Rekvizitlar bo'yicha mablag' kelib tushishini tekshirish.",
+                step2Title: "AML xavfini tekshirish",
+                step2Desc: "Tranzaksiyani tozalikka avtomatik skriningsimon tekshiruvdan o'tkazish.",
+                step3Title: "Mablag'larni chiqarish",
+                step3Desc: "Konvertatsiya qilingan aktivni ko'rsatilgan manzilga o'tkazish.",
+                closeStatusBtn: "Orqa fonga yashirish",
+                bannerOpen: "Ochish",
+                bannerCancel: "Bekor qilish",
+                bannerActiveStatus: "Buyurtmani qayta ishlash (Depozitni kutish)",
+                fiatLabel: "Bank kartasi / SBP / Kaspi raqamingiz (kriptovalyuta tushadigan joy):",
+                fiatPlaceholder: "Masalan: 2202 2020 3030 ...",
+                fiatGatewayTitle: "O'tkazma uchun fiat shlyuzi rekvizitlari:",
+                fiatGatewayText: "Bank / SBP: +7 (900) 555-35-35 (MEX Pay rasmiy shlyuzi) <br> Qabul qiluvchi: Mex Pay Global Ltd.",
+                cryptoLabel: "Fiat olish uchun rekvizitlaringiz (karta / hisob):",
+                cryptoPlaceholder: "Fiat olish uchun karta raqamini kiriting",
+                cryptoGatewayTitle: "Aktiv yuborish uchun shlyuz kriptohamyon manzili:",
+                cryptoGatewayText: "USDT (TRC20): TMEXP2POfficialEscrowWallet777...",
+                amlText: "Ayirboshlash qoidalari / AML",
+                termsText: "Foydalanuvchi shartnomasi",
+                contactsText: "Qo'llab-quvvatlash",
+                legalData: {
+                    aml: { title: "Ayirboshlash qoidalari va AML siyosati", content: "<p><b>1. Umumiy qoidalar</b><br>Ushbu qoidalar MEX Pay platformasidagi amallarni tartibga soladi.</p>" },
+                    terms: { title: "Foydalanuvchi shartnomasi", content: "<p><b>1. Shartnoma predmeti</b><br>MEX Pay platformasi aktivlarni konvertatsiya qilish vositalarini taqdim etadi.</p>" },
+                    contacts: { title: "Qo'llab-quvvatlash va aloqa", content: "<p>• <b>Email:</b> support@mexpay-express.io<br>• <b>Ish vaqti:</b> 24/7</p>" }
+                }
             }
         };
 
         function changeLanguage() {
             let lang = document.getElementById('langSelect').value;
-            let t = translations[lang];
+            let t = translations[lang] || translations.ru;
             
-            document.getElementById('heroTitle').innerText = t.heroTitle;
-            document.getElementById('heroDesc').innerText = t.heroDesc;
-            document.getElementById('aboutHeading').innerText = t.aboutHeading;
-            document.getElementById('aboutText').innerText = t.aboutText;
-            document.getElementById('list1').innerText = t.list1;
-            document.getElementById('list2').innerText = t.list2;
-            document.getElementById('list3').innerText = t.list3;
-            document.getElementById('list4').innerText = t.list4;
-            document.getElementById('formTitle').innerText = t.formTitle;
-            document.getElementById('lblCurrency').innerText = t.lblCurrency;
-            document.getElementById('lblAmount').innerText = t.lblAmount;
-            document.getElementById('lblName').innerText = t.lblName;
-            document.getElementById('lblMessage').innerText = t.lblMessage;
-            document.getElementById('btnSubmit').innerText = t.btnSubmit;
-            document.getElementById('noticeText').innerText = t.noticeText;
-            document.getElementById('footerText').innerText = t.footerText;
-            document.getElementById('termsLink').innerText = t.termsLink;
+            document.getElementById('lblVipBadge').innerText = t.vipBadge;
+            document.getElementById('txtTitle').innerHTML = t.title;
+            document.getElementById('txtSub').innerText = t.sub;
+            document.getElementById('lblSend').innerText = t.send;
+            document.getElementById('lblReceive').innerText = t.receive;
+            document.getElementById('swapBtnTitle').title = t.swapTitle;
+            document.getElementById('btnExchange').innerText = t.btnEx;
+            document.getElementById('lblLiveTitle').innerText = t.liveTitle;
+            document.getElementById('lblLiveIndicator').innerText = t.liveIndicator;
+            
+            document.querySelectorAll('.txStatusClass').forEach(el => {
+                el.innerText = t.success;
+            });
+
+            document.getElementById('lblMarketTitle').innerText = t.marketTitle;
+            document.getElementById('lblGuarantTitle').innerText = t.guarTitle;
+            document.getElementById('lblGuarantText').innerText = t.guarText;
+            document.getElementById('chatHeaderTitle').innerText = t.chatTitle;
+            document.getElementById('botWelcome').innerText = t.botHello;
+            document.getElementById('typingIndicator').innerText = t.typingText;
+            document.getElementById('chatInput').placeholder = t.placeholderChat;
+            document.getElementById('btnSend').innerText = t.sendBtn;
+            document.getElementById('btnConfirm').innerText = t.btnConf;
+            document.getElementById('btnCancel').innerText = t.btnCanc;
+            document.getElementById('modalDesc').innerText = t.modDesc;
+            document.getElementById('lblSumToPay').innerText = t.sumToPay;
+
+            document.getElementById('lblTimerTitle').innerText = t.timerTitle;
+            document.getElementById('lblStep1Title').innerText = t.step1Title;
+            document.getElementById('lblStep1Desc').innerText = t.step1Desc;
+            document.getElementById('lblStep2Title').innerText = t.step2Title;
+            document.getElementById('lblStep2Desc').innerText = t.step2Desc;
+            document.getElementById('lblStep3Title').innerText = t.step3Title;
+            document.getElementById('lblStep3Desc').innerText = t.step3Desc;
+            document.getElementById('btnCloseStatus').innerText = t.closeStatusBtn;
+            document.getElementById('bannerOpenBtn').innerText = t.bannerOpen;
+            document.getElementById('bannerCancelBtn').innerText = t.bannerCancel;
+
+            document.getElementById('linkAml').innerText = t.amlText;
+            document.getElementById('linkTerms').innerText = t.termsText;
+            document.getElementById('linkContacts').innerText = t.contactsText;
+
+            let modalOverlay = document.getElementById('orderModal');
+            if (modalOverlay.style.display === 'flex') {
+                let userWalletInput = document.getElementById('userWalletInput');
+                let activeInputVal = userWalletInput ? userWalletInput.value : '';
+                let sendSel = document.getElementById('sendCurrency');
+                let sendType = sendSel.options[sendSel.selectedIndex].getAttribute('data-type') || 'fiat';
+                let container = document.getElementById('modalDynamicContent');
+
+                if(sendType === 'fiat') {
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>${t.fiatLabel}</label>
+                            <input type="text" class="form-input" id="userWalletInput" placeholder="${t.fiatPlaceholder}" value="${activeInputVal}">
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">${t.fiatGatewayTitle}</div>
+                        <div class="requisites-box">
+                            ${t.fiatGatewayText}
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>${t.cryptoLabel}</label>
+                            <input type="text" class="form-input" id="userWalletInput" placeholder="${t.cryptoPlaceholder}" value="${activeInputVal}">
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">${t.cryptoGatewayTitle}</div>
+                        <div class="requisites-box">
+                            ${t.cryptoGatewayText}
+                        </div>
+                    `;
+                }
+            }
         }
 
-        function updateCurrencySymbol() {
-            let cur = document.getElementById('currencySelect').value;
-            let sym = symbols[cur] || "₽";
-            document.querySelectorAll('.currSym').forEach(el => el.innerText = sym);
+        // Обновленная формула с бонусом +5% в пользу пользователя
+        function calculateExchange() {
+            let sendAmount = parseFloat(document.getElementById('sendAmount').value) || 0;
+            let sendCurrency = document.getElementById('sendCurrency').value;
+            let receiveCurrency = document.getElementById('receiveCurrency').value;
+            
+            let limits = exchangeLimits[sendCurrency] || { min: 1, max: 10000000 };
+            let warningEl = document.getElementById('limitWarning');
+            let submitBtn = document.getElementById('btnExchange');
+            let lang = document.getElementById('langSelect').value;
+
+            if (sendAmount < limits.min || sendAmount > limits.max) {
+                let limitText = lang === 'en' ? `⚠️ Limit: from ${limits.min.toLocaleString()} to ${limits.max.toLocaleString()} ${sendCurrency}` :
+                                lang === 'zh' ? `⚠️ 限额：从 ${limits.min.toLocaleString()} 到 ${limits.max.toLocaleString()} ${sendCurrency}` :
+                                lang === 'tr' ? `⚠️ Limit: ${limits.min.toLocaleString()} ile ${limits.max.toLocaleString()} ${sendCurrency} arası` :
+                                lang === 'kz' ? `⚠️ Лимит: ${limits.min.toLocaleString()} - ${limits.max.toLocaleString()} ${sendCurrency} аралығында` :
+                                lang === 'uz' ? `⚠️ Limit: ${limits.min.toLocaleString()} dan ${limits.max.toLocaleString()} ${sendCurrency} gacha` :
+                                `⚠️ Лимит: от ${limits.min.toLocaleString()} до ${limits.max.toLocaleString()} ${sendCurrency}`;
+                warningEl.innerHTML = `<span style="color: #f85149;">${limitText}</span>`;
+                submitBtn.style.opacity = "0.5";
+                submitBtn.style.pointerEvents = "none";
+                document.getElementById('receiveAmount').value = "0";
+                return;
+            } else {
+                warningEl.innerHTML = "";
+                submitBtn.style.opacity = "1";
+                submitBtn.style.pointerEvents = "auto";
+            }
+
+            let sendPriceUSD = assetPricesUSD[sendCurrency] || 1;
+            let receivePriceUSD = assetPricesUSD[receiveCurrency] || 1;
+            
+            let totalUSD = sendAmount * sendPriceUSD;
+            let rawValue = totalUSD / receivePriceUSD;
+            let result = rawValue / 0.95238; // Бонус +5% в пользу пользователя
+
+            document.getElementById('receiveAmount').value = result > 10 ? result.toFixed(2) : result.toFixed(6);
+
+            saveActiveOrderState();
         }
 
-        function setAmount(val, btn) {
-            document.getElementById('customAmount').value = val;
-            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        function swapCurrencies() {
+            let sendSel = document.getElementById('sendCurrency');
+            let receiveSel = document.getElementById('receiveCurrency');
+            
+            let temp = sendSel.value;
+            sendSel.value = receiveSel.value;
+            receiveSel.value = temp;
+            
+            calculateExchange();
         }
+
+        // --- Persistent Order Logic (LocalStorage) ---
+        let activeOrderStateData = null;
+        let timerInterval = null;
+
+        function saveActiveOrderState() {
+            let modal = document.getElementById('orderModal');
+            if (modal && modal.style.display === 'flex') {
+                let orderData = {
+                    isOpen: true,
+                    orderId: document.getElementById('modalTitle').innerText,
+                    amount: document.getElementById('sendAmount').value,
+                    sendCurrency: document.getElementById('sendCurrency').value,
+                    receiveCurrency: document.getElementById('receiveCurrency').value,
+                    receiveAmount: document.getElementById('receiveAmount').value,
+                    userWallet: document.getElementById('userWalletInput') ? document.getElementById('userWalletInput').value : ''
+                };
+                localStorage.setItem('mex_active_order', JSON.stringify(orderData));
+            }
+        }
+
+        function restoreOrderState() {
+            let saved = localStorage.getItem('mex_active_order');
+            if (saved) {
+                try {
+                    let data = JSON.parse(saved);
+                    if (data.isOpen) {
+                        activeOrderStateData = data;
+                        document.getElementById('sendAmount').value = data.amount;
+                        document.getElementById('sendCurrency').value = data.sendCurrency;
+                        document.getElementById('receiveCurrency').value = data.receiveCurrency;
+                        calculateExchange();
+                        
+                        // Если заявка была в фоне, показываем фоновый баннер
+                        if (data.inBackground) {
+                            showActiveBanner(data.orderId);
+                        } else {
+                            openOrderModal(true, data);
+                        }
+                    }
+                } catch(e) {
+                    console.error("Error restoring order", e);
+                }
+            }
+        }
+
+        function cancelOrder() {
+            try {
+                localStorage.removeItem('mex_active_order');
+            } catch(e) {}
+            activeOrderStateData = null;
+            let modal = document.getElementById('orderModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            hideActiveBanner();
+        }
+
+        function closeOrderModal() {
+            let modal = document.getElementById('orderModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // --- Управление интерактивным статусом / чек-пейджем и фоном ---
+        function startOrderTracker(orderIdText) {
+            let formattedTitle = orderIdText.replace('Создание заявки', 'Обработка ордера').replace('Create Order', 'Processing Order').replace('创建订单', '处理订单').replace('İşlem Oluştur', 'İşlem İşleniyor').replace('Тапсырыс', 'Тапсырысты өңдеу').replace('Buyurtma', 'Buyurtmani qayta ishlash');
+            
+            document.getElementById('statusModalTitle').innerText = formattedTitle;
+            document.getElementById('statusModal').style.display = 'flex';
+
+            // Сохраняем стейт ордера со статусом в работе
+            if(activeOrderStateData) {
+                activeOrderStateData.inBackground = false;
+                activeOrderStateData.orderId = formattedTitle;
+                localStorage.setItem('mex_active_order', JSON.stringify(activeOrderStateData));
+            }
+
+            // Сброс шагов
+            document.getElementById('step1').className = 'status-step active';
+            document.getElementById('step1').querySelector('.status-icon').innerText = '1';
+            document.getElementById('step2').className = 'status-step';
+            document.getElementById('step2').querySelector('.status-icon').innerText = '2';
+            document.getElementById('step3').className = 'status-step';
+            document.getElementById('step3').querySelector('.status-icon').innerText = '3';
+
+            // Таймер 15 минут
+            let duration = 15 * 60;
+            let timerEl = document.getElementById('orderTimer');
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                let minutes = Math.floor(duration / 60);
+                let seconds = duration % 60;
+                timerEl.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (duration === 850) {
+                    document.getElementById('step1').className = 'status-step completed';
+                    document.getElementById('step1').querySelector('.status-icon').innerText = '✓';
+                    document.getElementById('step2').className = 'status-step active';
+                } else if (duration === 820) {
+                    document.getElementById('step2').className = 'status-step completed';
+                    document.getElementById('step2').querySelector('.status-icon').innerText = '✓';
+                    document.getElementById('step3').className = 'status-step active';
+                } else if (duration === 790) {
+                    document.getElementById('step3').className = 'status-step completed';
+                    document.getElementById('step3').querySelector('.status-icon').innerText = '✓';
+                    clearInterval(timerInterval);
+                }
+
+                if (--duration < 0) {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        function minimizeToBackground() {
+            document.getElementById('statusModal').style.display = 'none';
+            let currentId = document.getElementById('statusModalTitle').innerText;
+            
+            if(activeOrderStateData) {
+                activeOrderStateData.inBackground = true;
+                localStorage.setItem('mex_active_order', JSON.stringify(activeOrderStateData));
+            }
+            showActiveBanner(currentId);
+        }
+
+        function showActiveBanner(orderIdText) {
+            let banner = document.getElementById('activeOrderBanner');
+            document.getElementById('bannerTitleText').innerText = `⏳ ${orderIdText}`;
+            let lang = document.getElementById('langSelect').value;
+            let t = translations[lang] || translations.ru;
+            document.getElementById('bannerStatusText').innerText = t.bannerActiveStatus || "Обработка ордера (Ожидание депозита)";
+            banner.style.display = 'flex';
+        }
+
+        function hideActiveBanner() {
+            document.getElementById('activeOrderBanner').style.display = 'none';
+        }
+
+        function openStatusModalFromBanner() {
+            if(activeOrderStateData && activeOrderStateData.orderId) {
+                document.getElementById('statusModalTitle').innerText = activeOrderStateData.orderId;
+                document.getElementById('statusModal').style.display = 'flex';
+            }
+        }
+
+        function cancelActiveOrderFromBanner() {
+            cancelOrder();
+        }
+
+        function cancelOrderFromStatusModal() {
+            document.getElementById('statusModal').style.display = 'none';
+            cancelOrder();
+        }
+
+        function closeStatusModal() {
+            document.getElementById('statusModal').style.display = 'none';
+        }
+
+        // Управление модальным окном правил и контактов в футере
+        function openLegalModal(type) {
+            let lang = document.getElementById('langSelect').value;
+            let t = translations[lang] || translations.ru;
+            let data = t.legalData[type];
+            
+            if (data) {
+                document.getElementById('legalModalTitle').innerText = data.title;
+                document.getElementById('legalModalContent').innerHTML = data.content;
+                document.getElementById('legalModal').style.display = 'flex';
+            }
+        }
+
+        function closeLegalModal() {
+            document.getElementById('legalModal').style.display = 'none';
+        }
+        // ----------------------------------------------
+
+        // Генератор живых транзакций с учетом бонуса +5% в пользу пользователя
+        const availableCurrenciesList = ["RUB", "KZT", "USDT", "BTC", "GRAM", "USD", "TRY", "UZS"];
+        const paymentMethodsData = {
+            "RUB": ["СБП", "Sberbank", "Tinkoff", "AlfaBank"],
+            "KZT": ["Kaspi Gold", "Halyk Bank", "Jusan"],
+            "UZS": ["Humo", "UzCard", "KapitalBank"],
+            "TRY": ["Ziraat", "Garanti", "Papara"],
+            "USD": ["Wise", "Revolut", "Visa/MC"],
+            "USDT": ["TRC20 Wallet", "BEP20 Wallet"],
+            "BTC": ["Bitcoin Network"],
+            "GRAM": ["Gram Wallet Direct"]
+        };
+
+        function generateRandomRequisite(currency) {
+            let methods = paymentMethodsData[currency] || ["Card/Wallet"];
+            let chosenMethod = methods[Math.floor(Math.random() * methods.length)];
+            
+            if (currency === "USDT" || currency === "BTC" || currency === "GRAM") {
+                let randomHash = Math.random().toString(36).substring(2, 6) + "..." + Math.random().toString(36).substring(2, 6);
+                return `${chosenMethod} • ${randomHash}`;
+            } else {
+                let randomDigits = Math.floor(Math.random() * 9000 + 1000);
+                return `${chosenMethod} • ****${randomDigits}`;
+            }
+        }
+
+        setInterval(() => {
+            let c1 = availableCurrenciesList[Math.floor(Math.random() * availableCurrenciesList.length)];
+            let c2 = availableCurrenciesList[Math.floor(Math.random() * availableCurrenciesList.length)];
+            while(c1 === c2) {
+                c2 = availableCurrenciesList[Math.floor(Math.random() * availableCurrenciesList.length)];
+            }
+
+            let limits = exchangeLimits[c1] || { min: 1000, max: 20000 };
+            let sum = Math.floor(Math.random() * (limits.max / 5 - limits.min / 5) + limits.min / 5);
+            
+            let sendPriceUSD = assetPricesUSD[c1] || 1;
+            let receivePriceUSD = assetPricesUSD[c2] || 1;
+            let totalUSD = sum * sendPriceUSD;
+            let rawValue = totalUSD / receivePriceUSD;
+            let out = rawValue / 0.95238; // Бонус +5% в пользу пользователя в ленте
+            let outFormatted = out > 10 ? out.toFixed(2) : out.toFixed(6);
+
+            let randomReq = generateRandomRequisite(c1);
+            let lang = document.getElementById('langSelect').value;
+            let successText = translations[lang] ? translations[lang].success : "Успешно";
+
+            let txContainer = document.getElementById('liveTransactions');
+            let newTx = document.createElement('div');
+            newTx.className = 'tx-item';
+            newTx.innerHTML = `
+                <div class="tx-info">
+                    <span>${sum.toLocaleString()} ${c1} → ${outFormatted} ${c2}</span>
+                    <span class="tx-details">${randomReq}</span>
+                </div>
+                <span class="tx-status txStatusClass">${successText}</span>
+            `;
+            
+            txContainer.insertBefore(newTx, txContainer.firstChild);
+            if(txContainer.children.length > 5) {
+                txContainer.removeChild(txContainer.lastChild);
+            }
+        }, 3500);
+
+        fetchRealMarketPrices();
+        setInterval(fetchRealMarketPrices, 60000);
+
+        function validateRequisite(value, type) {
+            let cleanVal = value.trim();
+            if (type === 'fiat') {
+                let sbpRegex = /^(\+7|8)\d{10}$/;
+                let cardRegex = /^\d{13,19}$/;
+                let accountRegex = /^[A-Z0-9]{10,30}$/i;
+                return sbpRegex.test(cleanVal) || cardRegex.test(cleanVal) || accountRegex.test(cleanVal);
+            } else {
+                let trcRegex = /^T[1-9A-HJ-NP-Za-km-z]{33}$/;
+                let btcRegex = /^(1|3|bc1)[a-km-zA-HJ-NP-Z1-9]{25,39}$/;
+                let generalCryptoRegex = /^[a-zA-Z0-9_-]{30,65}$/;
+                return trcRegex.test(cleanVal) || btcRegex.test(cleanVal) || generalCryptoRegex.test(cleanVal);
+            }
+        }
+
+        function openOrderModal(isRestoring = false, restoredData = null) {
+            let amount = document.getElementById('sendAmount').value;
+            let sendSel = document.getElementById('sendCurrency');
+            let sendCode = sendSel.value;
+            let sendType = sendSel.options[sendSel.selectedIndex].getAttribute('data-type') || 'fiat';
+            let lang = document.getElementById('langSelect').value;
+            let t = translations[lang] || translations.ru;
+            
+            let randId = restoredData ? restoredData.orderId.replace(/[^0-9]/g, '') : Math.floor(Math.random() * 89999 + 10000);
+            
+            let orderTitlePrefix = lang === 'en' ? "Create Order #" :
+                                   lang === 'zh' ? "创建订单 #" :
+                                   lang === 'tr' ? "İşlem Oluştur #" :
+                                   lang === 'kz' ? "Тапсырыс #" :
+                                   lang === 'uz' ? "Buyurtma #" : "Создание заявки №";
+
+            document.getElementById('modalTitle').innerText = `${orderTitlePrefix}${randId}`;
+            document.getElementById('modalDesc').innerText = t.modDesc || "Проверьте детали сделки и укажите необходимые данные для завершения обмена.";
+            document.getElementById('modalSum').innerText = `${amount} ${sendCode}`;
+            document.getElementById('requisiteError').style.display = 'none';
+            
+            let container = document.getElementById('modalDynamicContent');
+            
+            if(sendType === 'fiat') {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label>${t.fiatLabel}</label>
+                        <input type="text" class="form-input" id="userWalletInput" placeholder="${t.fiatPlaceholder}" oninput="saveActiveOrderState()">
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">${t.fiatGatewayTitle}</div>
+                    <div class="requisites-box">
+                        ${t.fiatGatewayText}
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label>${t.cryptoLabel}</label>
+                        <input type="text" class="form-input" id="userWalletInput" placeholder="${t.cryptoPlaceholder}" oninput="saveActiveOrderState()">
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">${t.cryptoGatewayTitle}</div>
+                    <div class="requisites-box">
+                        ${t.cryptoGatewayText}
+                    </div>
+                `;
+            }
+            
+            document.getElementById('orderModal').style.display = 'flex';
+            if (!isRestoring) {
+                saveActiveOrderState();
+                activeOrderStateData = {
+                    isOpen: true,
+                    orderId: document.getElementById('modalTitle').innerText,
+                    amount: amount,
+                    sendCurrency: sendCode,
+                    receiveCurrency: document.getElementById('receiveCurrency').value,
+                    inBackground: false
+                };
+            }
+        }
+
+        function confirmPayment() {
+            let userWalletInput = document.getElementById('userWalletInput');
+            let userWallet = userWalletInput ? userWalletInput.value.trim() : '';
+            let sendSel = document.getElementById('sendCurrency');
+            let sendType = sendSel.options[sendSel.selectedIndex].getAttribute('data-type') || 'fiat';
+            let lang = document.getElementById('langSelect').value;
+            let t = translations[lang] || translations.ru;
+            let errEl = document.getElementById('requisiteError');
+
+            if(!userWallet || !validateRequisite(userWallet, sendType)) {
+                userWalletInput.classList.add('error');
+                errEl.style.display = 'block';
+                alert(t.alertReq);
+                return;
+            } else {
+                userWalletInput.classList.remove('error');
+                errEl.style.display = 'none';
+            }
+            
+            let currentOrderId = document.getElementById('modalTitle').innerText;
+            closeOrderModal();
+            startOrderTracker(currentOrderId);
+        }
+
+        // Чат техподдержки
+        function toggleChat() {
+            let win = document.getElementById('chatWindow');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function sendChatMessage() {
+            let input = document.getElementById('chatInput');
+            let text = input.value.trim();
+            if (!text) return;
+
+            let messagesContainer = document.getElementById('chatMessages');
+            
+            let userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerText = text;
+            messagesContainer.appendChild(userMsg);
+            
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            let indicator = document.getElementById('typingIndicator');
+            indicator.style.display = 'block';
+
+            let randomDelay = Math.floor(Math.random() * (300000 - 180000 + 1)) + 180000;
+
+            setTimeout(() => {
+                indicator.style.display = 'none';
+                let botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                
+                let lang = document.getElementById('langSelect').value;
+                const localizedAnswers = {
+                    ru: [
+                        "Оператор принял ваш вопрос. Все выплаты производятся строго по регламенту в течение 1-3 минут после подтверждения шлюзом.",
+                        "Убедитесь, что перевели точную сумму. Как только сеть обработает транзакцию, средства поступят на указанный счет.",
+                        "Эскроу-сервис на связи. Переводы защищены гарантией платформы."
+                    ],
+                    en: [
+                        "The operator has received your question. All payouts are made strictly according to regulations within 1-3 minutes after gateway confirmation.",
+                        "Make sure you transferred the exact amount. As soon as the network processes the transaction, funds will be credited.",
+                        "Escrow service is online. Transfers are protected by platform warranty."
+                    ],
+                    zh: [
+                        "客服已收到您的提问。所有付款均严格按照规定在网关确认后 1-3 分钟内支付。",
+                        "请确保您转账了准确的金额。网络处理完交易后，资金将立即到账。",
+                        "托管服务在线。所有转账均受平台保障。"
+                    ],
+                    tr: [
+                        "Operatör sorunuzu aldı. Tüm ödemeler ağ geçidi onayından sonra 1-3 dakika içinde kurallara uygun olarak yapılır.",
+                        "Tam tutarı gönderdiğinizden emin olun. Ağ işlemi işler işlemez fonlar hesaba geçecektir.",
+                        "Emanet hizmeti çevrimiçi. Transferler platform garantisi altındadır."
+                    ],
+                    kz: [
+                        "Оператор сұрағыңызды қабылдады. Барлық төлемдер шлюз расталғаннан кейін 1-3 минут ішінде регламентке сай жасалады.",
+                        "Дәл соманы аударғаныңызға көз жеткізіңіз. Желі транзакцияны өңдесімен қаражат шотқа түседі.",
+                        "Эскроу-сервисі байланыста. Аударымдар платформа кепілдігімен қорғалған."
+                    ],
+                    uz: [
+                        "Operator savolingizni qabul qildi. Barcha to'lovlar shlyuz tasdiqlangandan so'ng 1-3 daqiqa ichida qoidaga ko'ra amalga oshiriladi.",
+                        "Aniq summani o'tkazganingizga ishonch hosil qiling. Tarmoq tranzaksiyani qayta ishlashi bilan mablag'lar hisobingizga tushadi.",
+                        "Eskrou xizmati aloqada. O'tkazmalar platforma kafolati bilan himoyalangan."
+                    ]
+                };
+
+                let answers = localizedAnswers[lang] || localizedAnswers.ru;
+                botMsg.innerText = answers[Math.floor(Math.random() * answers.length)];
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, randomDelay);
+        }
+
+        function handleChatEnter(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        window.onload = function() {
+            restoreOrderState();
+        };
     </script>
 </body>
 </html>
